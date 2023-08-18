@@ -10,7 +10,8 @@ times=(
     "21412200"
 )
 
-names=("手首1" "手首2" "手首3")
+# file_name: studentId_procedure, output_file_name: id_studentId_procedure
+names=("a_手首1" "a_手首2" "a_手首3")
 
 # echo ${times[0]}
 # echo ${names[0]}
@@ -18,7 +19,9 @@ names=("手首1" "手首2" "手首3")
 let i=0;
 for time in ${times[@]}; do
     echo "${i}  ${time}"
-    echo "${i}  ${names[i]}"
-    python3 0724cut.py $time "${i}_${names[i]}"
+    echo "${i}  ${names[i-1]}"
+    padding_i="00${i}"
+    echo "${padding_i:-3}"
+    python3 0724cut.py $time "${padding_i:-3}_${names[i]}"
     let i++;
 done

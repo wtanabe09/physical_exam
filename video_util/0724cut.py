@@ -4,7 +4,7 @@
 import os
 import sys
 import datetime
-os.environ["IMAGEIO_FFMPEG_EXE"] = "/opt/homebrew/bin/ffmpeg"
+os.environ["IMAGEIO_FFMPEG_EXE"] = "/usr/local/bin/ffmpeg"
 
 
 td_start = datetime.timedelta(weeks=0, days=0, hours=0, minutes=int(sys.argv[1][0:2]), seconds=int(sys.argv[1][2:4]), milliseconds=0, microseconds=0)
