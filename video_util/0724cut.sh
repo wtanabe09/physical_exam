@@ -23,6 +23,7 @@ times=(
 let i=0;
 for time in ${times[@]}; do
     padding_i="00${i}"
+    # cut video
     python3 0724cut.py $time "a_${padding_i-3}_${names[i]}"
     let i++;
 done

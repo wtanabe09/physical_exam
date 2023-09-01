@@ -1,0 +1,151 @@
+<mxfile host="app.diagrams.net" modified="2023-08-21T05:40:44.454Z" agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36" etag="HMEgnPWuzxP4-QItAtS2" version="21.6.2" type="device" pages="3">
+  <diagram id="C5RBs43oDa-KdzZeNtuy" name="機能">
+    <mxGraphModel dx="1172" dy="1530" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="WIyWlLk6GJQsqaUBKTNV-0" />
+        <mxCell id="WIyWlLk6GJQsqaUBKTNV-1" parent="WIyWlLk6GJQsqaUBKTNV-0" />
+        <mxCell id="d3LJ-qGuldWB5FUP5Cbx-22" value="&lt;table border=&quot;1&quot; width=&quot;100%&quot; height=&quot;100%&quot; cellpadding=&quot;4&quot; style=&quot;width:100%;height:100%;border-collapse:collapse;&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;th&gt;機能：ビデオ録画&lt;/th&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;b&gt;処理内容：&lt;/b&gt;&lt;div style=&quot;&quot;&gt;- ブラウザからビデオ映像を読み込む&lt;/div&gt;&lt;div style=&quot;&quot;&gt;- 録画の開始・終了&lt;/div&gt;&lt;div style=&quot;&quot;&gt;- 録画完了したデータをAPサーバへ&lt;/div&gt;&lt;div style=&quot;&quot;&gt;&lt;br&gt;&lt;/div&gt;&lt;div style=&quot;&quot;&gt;&lt;b&gt;取得元：&lt;/b&gt;&lt;/div&gt;&lt;div style=&quot;&quot;&gt;- ブラウザでビデオを撮影，撮影されたデータ&lt;/div&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;b&gt;操作：&lt;/b&gt;&lt;br&gt;- 録画開始，終了ボタン押下で録画&lt;br&gt;- リプレイボタン押下で動画再生画面へ&lt;br&gt;- 姿勢情報押下で姿勢特徴量付きのリプレイ画面へ&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;overflow=fill;" vertex="1" parent="WIyWlLk6GJQsqaUBKTNV-1">
+          <mxGeometry x="40" y="30" width="240" height="260" as="geometry" />
+        </mxCell>
+        <mxCell id="d3LJ-qGuldWB5FUP5Cbx-23" value="&lt;table border=&quot;1&quot; width=&quot;100%&quot; height=&quot;100%&quot; cellpadding=&quot;4&quot; style=&quot;width:100%;height:100%;border-collapse:collapse;&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;th&gt;機能：リプレイ機能&lt;/th&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;b&gt;処理内容：&lt;/b&gt;&lt;div style=&quot;&quot;&gt;- 動画再生&lt;/div&gt;&lt;div style=&quot;&quot;&gt;&lt;br&gt;&lt;/div&gt;&lt;div style=&quot;&quot;&gt;&lt;b&gt;取得元：&lt;/b&gt;&lt;/div&gt;&lt;div style=&quot;&quot;&gt;- DB&lt;/div&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;b&gt;操作：&lt;/b&gt;&lt;br&gt;- 再生，停止ボタンで動画を操作&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;overflow=fill;" vertex="1" parent="WIyWlLk6GJQsqaUBKTNV-1">
+          <mxGeometry x="40" y="420" width="240" height="260" as="geometry" />
+        </mxCell>
+        <mxCell id="d3LJ-qGuldWB5FUP5Cbx-24" value="&lt;table border=&quot;1&quot; width=&quot;100%&quot; height=&quot;100%&quot; cellpadding=&quot;4&quot; style=&quot;width:100%;height:100%;border-collapse:collapse;&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;th&gt;機能：姿勢特徴量フィードバック&lt;/th&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;b&gt;処理内容：&lt;/b&gt;&lt;div style=&quot;&quot;&gt;- 骨格情報付き動画の再生&lt;/div&gt;&lt;div style=&quot;&quot;&gt;- 姿勢特徴量を表示&lt;/div&gt;&lt;div style=&quot;&quot;&gt;&lt;br&gt;&lt;/div&gt;&lt;div style=&quot;&quot;&gt;&lt;b&gt;取得元：&lt;/b&gt;&lt;/div&gt;&lt;div style=&quot;&quot;&gt;- 動画：DB&lt;/div&gt;&lt;div style=&quot;&quot;&gt;- 医者の関節点XY座標：Mediapipeライブラリ&lt;/div&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;b&gt;操作：&lt;/b&gt;&lt;br&gt;- 再生停止ボタンで動画を操作&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;overflow=fill;" vertex="1" parent="WIyWlLk6GJQsqaUBKTNV-1">
+          <mxGeometry x="40" y="830" width="240" height="260" as="geometry" />
+        </mxCell>
+        <mxCell id="TjuuNVHReDwoPyaaCnQI-13" value="" style="group" vertex="1" connectable="0" parent="WIyWlLk6GJQsqaUBKTNV-1">
+          <mxGeometry x="310" y="30" width="450" height="250" as="geometry" />
+        </mxCell>
+        <mxCell id="TjuuNVHReDwoPyaaCnQI-1" value="　動画撮影&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;" style="rounded=0;whiteSpace=wrap;html=1;align=left;" vertex="1" parent="TjuuNVHReDwoPyaaCnQI-13">
+          <mxGeometry width="450" height="249.99999999999997" as="geometry" />
+        </mxCell>
+        <mxCell id="TjuuNVHReDwoPyaaCnQI-2" value="" style="verticalLabelPosition=bottom;shadow=0;dashed=0;align=center;html=1;verticalAlign=top;strokeWidth=1;shape=mxgraph.mockup.containers.videoPlayer;strokeColor=#666666;strokeColor2=#008cff;strokeColor3=#c4c4c4;textColor=#666666;fillColor2=#008cff;barHeight=30;barPos=20;" vertex="1" parent="TjuuNVHReDwoPyaaCnQI-13">
+          <mxGeometry x="25.96153846153846" y="43.103448275862064" width="259.6153846153846" height="172.41379310344826" as="geometry" />
+        </mxCell>
+        <mxCell id="TjuuNVHReDwoPyaaCnQI-3" value="録画開始" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="TjuuNVHReDwoPyaaCnQI-13">
+          <mxGeometry x="320.19230769230774" y="43.103448275862064" width="103.84615384615384" height="34.48275862068965" as="geometry" />
+        </mxCell>
+        <mxCell id="TjuuNVHReDwoPyaaCnQI-4" value="録画終了" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="TjuuNVHReDwoPyaaCnQI-13">
+          <mxGeometry x="320.19230769230774" y="86.20689655172413" width="103.84615384615384" height="34.48275862068965" as="geometry" />
+        </mxCell>
+        <mxCell id="TjuuNVHReDwoPyaaCnQI-5" value="リプレイ" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="TjuuNVHReDwoPyaaCnQI-13">
+          <mxGeometry x="320.19230769230774" y="129.3103448275862" width="103.84615384615384" height="34.48275862068965" as="geometry" />
+        </mxCell>
+        <mxCell id="TjuuNVHReDwoPyaaCnQI-6" value="姿勢情報" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="TjuuNVHReDwoPyaaCnQI-13">
+          <mxGeometry x="320.19230769230774" y="172.41379310344826" width="103.84615384615384" height="34.48275862068965" as="geometry" />
+        </mxCell>
+        <mxCell id="TjuuNVHReDwoPyaaCnQI-14" value="" style="group" vertex="1" connectable="0" parent="WIyWlLk6GJQsqaUBKTNV-1">
+          <mxGeometry x="320" y="420" width="421.67" height="230" as="geometry" />
+        </mxCell>
+        <mxCell id="TjuuNVHReDwoPyaaCnQI-0" value="　リプレイ&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;" style="rounded=0;whiteSpace=wrap;html=1;align=left;" vertex="1" parent="TjuuNVHReDwoPyaaCnQI-14">
+          <mxGeometry width="421.66999999999996" height="230" as="geometry" />
+        </mxCell>
+        <mxCell id="TjuuNVHReDwoPyaaCnQI-7" value="" style="verticalLabelPosition=bottom;shadow=0;dashed=0;align=center;html=1;verticalAlign=top;strokeWidth=1;shape=mxgraph.mockup.containers.videoPlayer;strokeColor=#666666;strokeColor2=#008cff;strokeColor3=#c4c4c4;textColor=#666666;fillColor2=#008cff;barHeight=30;barPos=20;" vertex="1" parent="TjuuNVHReDwoPyaaCnQI-14">
+          <mxGeometry x="24.327115384615382" y="39.655172413793096" width="243.27115384615382" height="158.62068965517238" as="geometry" />
+        </mxCell>
+        <mxCell id="TjuuNVHReDwoPyaaCnQI-16" value="" style="group" vertex="1" connectable="0" parent="WIyWlLk6GJQsqaUBKTNV-1">
+          <mxGeometry x="330" y="830" width="440" height="250" as="geometry" />
+        </mxCell>
+        <mxCell id="TjuuNVHReDwoPyaaCnQI-8" value="　姿勢情報&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;" style="rounded=0;whiteSpace=wrap;html=1;align=left;" vertex="1" parent="TjuuNVHReDwoPyaaCnQI-16">
+          <mxGeometry width="440" height="249.99999999999997" as="geometry" />
+        </mxCell>
+        <mxCell id="TjuuNVHReDwoPyaaCnQI-9" value="" style="verticalLabelPosition=bottom;shadow=0;dashed=0;align=center;html=1;verticalAlign=top;strokeWidth=1;shape=mxgraph.mockup.containers.videoPlayer;strokeColor=#666666;strokeColor2=#008cff;strokeColor3=#c4c4c4;textColor=#666666;fillColor2=#008cff;barHeight=30;barPos=20;" vertex="1" parent="TjuuNVHReDwoPyaaCnQI-16">
+          <mxGeometry x="25.384615384615383" y="43.103448275862064" width="253.84615384615384" height="172.41379310344826" as="geometry" />
+        </mxCell>
+        <mxCell id="TjuuNVHReDwoPyaaCnQI-10" value="Actor" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;" vertex="1" parent="TjuuNVHReDwoPyaaCnQI-16">
+          <mxGeometry x="84.61538461538461" y="99.13793103448275" width="25.384615384615383" height="51.72413793103448" as="geometry" />
+        </mxCell>
+        <mxCell id="TjuuNVHReDwoPyaaCnQI-11" value="Actor" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;" vertex="1" parent="TjuuNVHReDwoPyaaCnQI-16">
+          <mxGeometry x="194.6153846153846" y="99.13793103448275" width="25.384615384615383" height="51.72413793103448" as="geometry" />
+        </mxCell>
+        <mxCell id="TjuuNVHReDwoPyaaCnQI-12" value="&lt;font style=&quot;font-size: 10px;&quot;&gt;膝に手を置いた時間&lt;/font&gt;&amp;nbsp;&lt;br&gt;&amp;nbsp;4:00&lt;br&gt;&lt;br&gt;&lt;font color=&quot;#3399ff&quot;&gt;&lt;u&gt;膝おき1&lt;br&gt;膝おき2&lt;br&gt;膝おき3&lt;br&gt;&lt;/u&gt;&lt;/font&gt;&lt;u style=&quot;border-color: var(--border-color); color: rgb(51, 153, 255);&quot;&gt;膝おき4&lt;/u&gt;&lt;font color=&quot;#3399ff&quot;&gt;&lt;u&gt;&lt;br&gt;&lt;/u&gt;&lt;/font&gt;" style="whiteSpace=wrap;html=1;aspect=fixed;align=left;" vertex="1" parent="TjuuNVHReDwoPyaaCnQI-16">
+          <mxGeometry x="296.15384615384613" y="43.103448275862064" width="110" height="110" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+  <diagram id="Vlszp6ly3Wn7LyEqQV02" name="画面設計">
+    <mxGraphModel dx="1172" dy="1530" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="7odz3qPGnmI16veq_G60-9" value="　リプレイ&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;" style="rounded=0;whiteSpace=wrap;html=1;align=left;" vertex="1" parent="1">
+          <mxGeometry x="50" y="440" width="520" height="290" as="geometry" />
+        </mxCell>
+        <mxCell id="7odz3qPGnmI16veq_G60-8" value="　動画撮影&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;" style="rounded=0;whiteSpace=wrap;html=1;align=left;" vertex="1" parent="1">
+          <mxGeometry x="50" y="110" width="520" height="290" as="geometry" />
+        </mxCell>
+        <mxCell id="9DPFLqovZUsY5uUFFJuT-1" value="" style="verticalLabelPosition=bottom;shadow=0;dashed=0;align=center;html=1;verticalAlign=top;strokeWidth=1;shape=mxgraph.mockup.containers.videoPlayer;strokeColor=#666666;strokeColor2=#008cff;strokeColor3=#c4c4c4;textColor=#666666;fillColor2=#008cff;barHeight=30;barPos=20;" vertex="1" parent="1">
+          <mxGeometry x="80" y="160" width="300" height="200" as="geometry" />
+        </mxCell>
+        <mxCell id="7odz3qPGnmI16veq_G60-1" value="録画開始" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="420" y="160" width="120" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="7odz3qPGnmI16veq_G60-3" value="録画終了" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="420" y="210" width="120" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="7odz3qPGnmI16veq_G60-4" value="リプレイ" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="420" y="260" width="120" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="7odz3qPGnmI16veq_G60-5" value="姿勢情報" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="420" y="310" width="120" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="7odz3qPGnmI16veq_G60-6" value="" style="verticalLabelPosition=bottom;shadow=0;dashed=0;align=center;html=1;verticalAlign=top;strokeWidth=1;shape=mxgraph.mockup.containers.videoPlayer;strokeColor=#666666;strokeColor2=#008cff;strokeColor3=#c4c4c4;textColor=#666666;fillColor2=#008cff;barHeight=30;barPos=20;" vertex="1" parent="1">
+          <mxGeometry x="80" y="490" width="300" height="200" as="geometry" />
+        </mxCell>
+        <mxCell id="7odz3qPGnmI16veq_G60-10" value="　姿勢情報&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;" style="rounded=0;whiteSpace=wrap;html=1;align=left;" vertex="1" parent="1">
+          <mxGeometry x="50" y="790" width="520" height="290" as="geometry" />
+        </mxCell>
+        <mxCell id="7odz3qPGnmI16veq_G60-11" value="" style="verticalLabelPosition=bottom;shadow=0;dashed=0;align=center;html=1;verticalAlign=top;strokeWidth=1;shape=mxgraph.mockup.containers.videoPlayer;strokeColor=#666666;strokeColor2=#008cff;strokeColor3=#c4c4c4;textColor=#666666;fillColor2=#008cff;barHeight=30;barPos=20;" vertex="1" parent="1">
+          <mxGeometry x="80" y="840" width="300" height="200" as="geometry" />
+        </mxCell>
+        <mxCell id="7odz3qPGnmI16veq_G60-12" value="Actor" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;" vertex="1" parent="1">
+          <mxGeometry x="150" y="905" width="30" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="7odz3qPGnmI16veq_G60-13" value="Actor" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;" vertex="1" parent="1">
+          <mxGeometry x="280" y="905" width="30" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="7odz3qPGnmI16veq_G60-18" value="&amp;nbsp;膝に手を置いた時間&amp;nbsp;&lt;br&gt;&amp;nbsp;4:00&lt;br&gt;&lt;br&gt;&lt;font color=&quot;#3399ff&quot;&gt;&lt;u&gt;膝おき1&lt;br&gt;膝おき2&lt;br&gt;膝おき3&lt;br&gt;&lt;/u&gt;&lt;/font&gt;&lt;u style=&quot;border-color: var(--border-color); color: rgb(51, 153, 255);&quot;&gt;膝おき4&lt;/u&gt;&lt;font color=&quot;#3399ff&quot;&gt;&lt;u&gt;&lt;br&gt;&lt;/u&gt;&lt;/font&gt;" style="whiteSpace=wrap;html=1;aspect=fixed;align=left;" vertex="1" parent="1">
+          <mxGeometry x="400" y="840" width="130" height="130" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+  <diagram id="jeyZ_Yj9ixpEAnM3hspP" name="構成">
+    <mxGraphModel dx="586" dy="765" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="hQlf4OEUyIiZR5eWV8lz-1" value="&amp;nbsp; AWS&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;" style="rounded=1;whiteSpace=wrap;html=1;align=left;" vertex="1" parent="1">
+          <mxGeometry x="242.5" y="60" width="175" height="200" as="geometry" />
+        </mxCell>
+        <mxCell id="hQlf4OEUyIiZR5eWV8lz-2" value="" style="rounded=0;html=1;jettySize=auto;orthogonalLoop=1;fontSize=11;endArrow=block;endFill=0;endSize=8;strokeWidth=1;shadow=0;labelBackgroundColor=none;edgeStyle=orthogonalEdgeStyle;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="hQlf4OEUyIiZR5eWV8lz-3" target="hQlf4OEUyIiZR5eWV8lz-5">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="200" y="100" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="hQlf4OEUyIiZR5eWV8lz-3" value="現地PC" style="rounded=1;whiteSpace=wrap;html=1;fontSize=12;glass=0;strokeWidth=1;shadow=0;" vertex="1" parent="1">
+          <mxGeometry x="70" y="80" width="80" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="hQlf4OEUyIiZR5eWV8lz-4" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="hQlf4OEUyIiZR5eWV8lz-5" target="hQlf4OEUyIiZR5eWV8lz-7">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="hQlf4OEUyIiZR5eWV8lz-5" value="EC2" style="rounded=1;whiteSpace=wrap;html=1;fontSize=12;glass=0;strokeWidth=1;shadow=0;" vertex="1" parent="1">
+          <mxGeometry x="270" y="80" width="120" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="hQlf4OEUyIiZR5eWV8lz-6" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="hQlf4OEUyIiZR5eWV8lz-7" target="hQlf4OEUyIiZR5eWV8lz-8">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="hQlf4OEUyIiZR5eWV8lz-7" value="apach" style="whiteSpace=wrap;html=1;rounded=1;glass=0;strokeWidth=1;shadow=0;" vertex="1" parent="1">
+          <mxGeometry x="295" y="160" width="70" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="hQlf4OEUyIiZR5eWV8lz-8" value="Flask app server" style="whiteSpace=wrap;html=1;rounded=1;glass=0;strokeWidth=1;shadow=0;" vertex="1" parent="1">
+          <mxGeometry x="275" y="220" width="110" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="hQlf4OEUyIiZR5eWV8lz-9" value="動画撮影" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="70" y="220" width="100" height="40" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
