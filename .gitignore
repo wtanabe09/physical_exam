@@ -1,4 +1,5 @@
 .DS_Store
 /confidential/*.mp4
-/confidential/images
-/confidential/crop
+/confidential/cut_videos/*.mp4
+/confidential/cut_videos/images
+/confidential/cut_videos/crop
