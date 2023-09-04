@@ -1,4 +1,6 @@
-# ランドマーク映像の表示
+# ランドマーク映像の表示, 保存．
+# coordinate_outputでcsv出力, landmark_outpuで動画出力, 役割分担のため用意．
+# 現在はcoordinate_outputに統合済み.こちらは映像の保存のみ．(csv出力なし)
 import sys
 import cv2
 import mediapipe as mp
@@ -36,8 +38,9 @@ with mp_pose.Pose(
       print(cap.get(cv2.CAP_PROP_POS_FRAMES))
       cv2.rectangle(image, (150, 0), (video_width, video_hight), (0, 255, 0), thickness=-1)
     
+    # 現在時刻挿入
     dt_now = datetime.datetime.now()
-    cv2.putText(frame, f'{dt_now}', (0, 20), \
+    cv2.putText(image, f'{dt_now}', (0, 20), \
         cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), thickness=2)
     
     image.flags.writeable = False
@@ -54,8 +57,8 @@ with mp_pose.Pose(
     
     # cv2.imshow('MediaPipe Pose', image)
     writer.write(image)
-    if cv2.waitKey(5) & 0xFF == ord('q'):
-      break
+    # if cv2.waitKey(5) & 0xFF == ord('q'):
+    #   break
 cap.release()
 writer.release()
 cv2.destroyAllWindows()

@@ -1,4 +1,5 @@
 # ランドマーク映像の表示と, CSVファイルの書き込み保存を行うプログラム
+# お試し用プログラム. お試し用であるためファイル名は定数としている．
 import cv2
 import mediapipe as mp
 import numpy as np

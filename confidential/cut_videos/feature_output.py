@@ -2,7 +2,7 @@
 # from turtle import distance, window_width
 import cv2
 import sys
-import analysis # 自作 analysis.py
+import calculation # 自作 calculation.py
 
 
 file_base = sys.argv[1]
@@ -17,7 +17,7 @@ size = (video_width, video_hight)
 fmt = cv2.VideoWriter_fourcc('m', 'p', '4', 'v')
 writer = cv2.VideoWriter('./feature_video/'+file_base+'-C_feature.mp4', fmt, video_fps, size)
 
-dist = analysis.calc_distance(file_base)
+dist = calculation.calc_distance(file_base)
 int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
 print(dist[0])
 print(f'fps: {video_fps}')
@@ -30,7 +30,6 @@ while cap.isOpened():
         print('video end')
         break
     # 字幕表示
-    
     color = (255, 0, 0) if dist[i] <= 0.12 else (255, 255, 255)
     cv2.putText(frame, f'{dist[i]}', (0, 35), \
         cv2.FONT_HERSHEY_SIMPLEX, 0.5, color, thickness=2)

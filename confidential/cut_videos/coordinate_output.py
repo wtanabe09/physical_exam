@@ -57,10 +57,8 @@ with mp_pose.Pose(
         try:
             data1 = results.pose_landmarks.landmark[i].x
             data2 = results.pose_landmarks.landmark[i].y
-            # data3 = results.pose_landmarks.landmark[i].z
         except AttributeError as e:
-            # NoneTypeの場合0を挿入する
-            data1 = 1
+            data1 = 1 # NoneTypeの場合1を挿入する
             data2 = 1
             if i == 1:
               print(f"attribute error: {e}, frame: {now_frame}, point: {i}")
