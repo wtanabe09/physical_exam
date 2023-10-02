@@ -4,8 +4,8 @@ from matplotlib import pyplot
 import numpy as np
 
 # 座標取得する際に左右反転されている．右手を取りたい場合，左手の座標を見る．
-input_file = sys.argv[1] #csv ファイルセレクト
-output_file_path = sys.argv[2]
+input_csv = sys.argv[1]
+output_csv_path = sys.argv[2]
 
 is_action = False
 row_counter = 0
@@ -16,17 +16,22 @@ threshold = 45
 output_arr = np.zeros(4)
 output_csv = np.empty((0,4))
 
-with open(input_file) as file:
+with open(input_csv) as file:
   for line in file:
     input_arr = line.split(",")
-    right_hand_x = float(input_arr[(19*2)+1]) # 左手のインデックス（右手）
-    right_hand_y = float(input_arr[(19*2)+2])
-    right_knee_x = float(input_arr[(25*2)+2]) # 左膝のインデックス（右膝）
-    right_knee_y = float(input_arr[(25*2)+2])
+    x_doctor_right_hand = float(input_arr[(19*2)+1]) # 左手のインデックス（右手反転）
+    y_doctor_right_hand = float(input_arr[(19*2)+2])
+    x_doctor_right_knee = float(input_arr[(25*2)+2]) # 左膝のインデックス（右膝反転）
+    y_doctor_right_knee = float(input_arr[(25*2)+2])
+    # x_doctor_right_shoulder = float(input_arr[11*2]+1)
+    # x_patient_left_shoulder = float(input_arr[])
+
+
 
     # 右手から右膝までの距離
-    distance_hand_knee = math.sqrt((right_hand_x - right_knee_x)**2 + (right_hand_y - right_knee_y)**2)
-    print(round(row_counter/20, 1), round(distance_hand_knee, 1), end=', ')
+    distance_hand_knee = math.sqrt((x_doctor_right_hand - x_doctor_right_knee)**2 + (y_doctor_right_hand - y_doctor_right_knee)**2)
+    # print(round(row_counter/20, 1), round(distance_hand_knee, 1), end=', ')
+    # shoulder_distance = 
     
     if is_action:
       if distance_hand_knee <= threshold:
@@ -59,5 +64,5 @@ with open(input_file) as file:
 
     output_csv = np.vstack((output_csv, output_arr))
 
-np.savetxt(output_file_path, output_csv, delimiter = ',',fmt="%s")
+np.savetxt(output_csv_path, output_csv, delimiter = ',',fmt="%s")
 
