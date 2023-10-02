@@ -1,5 +1,4 @@
 #特徴量表示動画作成
-# from turtle import distance, window_width
 import cv2
 import sys
 import calculation # 自作 calculation.py
@@ -24,13 +23,27 @@ print(f'fps: {video_fps}')
 print(f'num of frame: {cap.get(cv2.CAP_PROP_FRAME_COUNT)}')
 
 i = 0
+count = 0
+n = 0
 while cap.isOpened():
     success, frame = cap.read()
     if not success:
         print('video end')
         break
     # 字幕表示
-    color = (255, 0, 0) if dist[i] <= 0.12 else (255, 255, 255)
+    if dist[i] <= 0.12:
+        n += 1
+        # print(dist[i])
+    else:
+        n = 0
+
+    if n >= 60:
+        color = (255, 0, 0)
+        # text = 'Not process'
+    else:
+        color = (255, 255, 255)
+        # text = 'In process'
+        
     cv2.putText(frame, f'{dist[i]}', (0, 35), \
         cv2.FONT_HERSHEY_SIMPLEX, 0.5, color, thickness=2)
     
