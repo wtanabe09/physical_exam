@@ -1,7 +1,9 @@
 .DS_Store
+*.mp4
 /confidential/0724/*.mp4
 /confidential/cut_videos/*.mp4
 /confidential/cut_videos/images
 /confidential/cut_videos/crop
 /confidential/cut_videos/feature_video
 /confidential/cut_videos/landmark_video
+/confidential/0908/
