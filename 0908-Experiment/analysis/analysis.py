@@ -13,25 +13,22 @@ count = 0
 action_number = 0
 threshold = 45
 
-output_arr = np.zeros(4)
+output_arr = np.zeros(4) # real_time, video_time, hand_knee_distance, is_action
 output_csv = np.empty((0,4))
 
 with open(input_csv) as file:
   for line in file:
     input_arr = line.split(",")
-    x_doctor_right_hand = float(input_arr[(19*2)+1]) # 左手のインデックス（右手反転）
+    # 右手（左手のインデックス）
+    x_doctor_right_hand = float(input_arr[(19*2)+1])
     y_doctor_right_hand = float(input_arr[(19*2)+2])
-    x_doctor_right_knee = float(input_arr[(25*2)+2]) # 左膝のインデックス（右膝反転）
+    # 右膝（左膝のインデックス）
+    x_doctor_right_knee = float(input_arr[(25*2)+2])
     y_doctor_right_knee = float(input_arr[(25*2)+2])
-    # x_doctor_right_shoulder = float(input_arr[11*2]+1)
-    # x_patient_left_shoulder = float(input_arr[])
-
-
 
     # 右手から右膝までの距離
     distance_hand_knee = math.sqrt((x_doctor_right_hand - x_doctor_right_knee)**2 + (y_doctor_right_hand - y_doctor_right_knee)**2)
     # print(round(row_counter/20, 1), round(distance_hand_knee, 1), end=', ')
-    # shoulder_distance = 
     
     if is_action:
       if distance_hand_knee <= threshold:
@@ -57,6 +54,8 @@ with open(input_csv) as file:
         print(f"stay hand")
 
     row_counter += 1
+
+    # create output array for csv file
     output_arr[0] = input_arr[0] # time into first col
     output_arr[1] = round(row_counter/20, 1) # video seconds into first col
     output_arr[2] = distance_hand_knee
