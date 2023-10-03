@@ -20,5 +20,5 @@ with open(input_csv) as file:
 
 
 def calc_elbow_angle(shoulder, elbow, wrist):
-  elbow_to_shoulder = shoulder - elbow
-  elbow_to_wrist = wrist - elbow
+  elbow_to_shoulder = shoulder - elbow # ベクトル
+  elbow_to_wrist = wrist - elbow # ベクトル
