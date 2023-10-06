@@ -8,16 +8,15 @@ import elbow_angle
 input_csv = sys.argv[1]
 result_csv_path = sys.argv[2]
 
-is_action = False
-row_counter = 0
-count = 0
-action_number = 0
-threshold = 45
-
-result_arr = np.zeros(4) # real_time, video_time, hand_knee_distance, is_action
-result_csv = np.empty((0,4))
-
 with open(input_csv) as file:
+  is_action = False
+  row_counter = 0
+  count = 0
+  action_number = 0
+  threshold = 45
+  result_arr = np.zeros(4) # real_time, video_time, hand_knee_distance, is_action
+  result_csv = np.empty((0,4))
+
   for line in file:
     input_arr = line.split(",")
     # 右手（左手のインデックス）
@@ -63,7 +62,7 @@ with open(input_csv) as file:
     row_counter += 1
 
     # create output array for csv file
-    result_arr = [input_arr[0], round(row_counter/20, 1), distance_hand_knee, elbow] # time into first col
+    result_arr = [input_arr[0], round(row_counter/20, 2), distance_hand_knee, elbow] # time into first col
     result_csv = np.vstack((result_csv, result_arr))
 
 np.savetxt(result_csv_path, result_csv, delimiter = ',',fmt="%s")
