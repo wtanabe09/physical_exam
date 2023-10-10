@@ -3,7 +3,7 @@ import math
 from matplotlib import pyplot
 import numpy as np
 
-input_csv = sys.argv[1] #csv ファイルセレクト
+# input_csv = sys.argv[1] #csv ファイルセレクト
 # output_csv_path = sys.argv[2]
 
 
