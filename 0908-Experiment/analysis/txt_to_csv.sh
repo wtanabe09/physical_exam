@@ -9,7 +9,8 @@ dirs=`ls $parent`
 
 for dir in $dirs; do
   python3 txt_to_csv.py "${parent}/${dir}/${dir}_1.txt" "data_csv_files/${dir}-doc.csv"
-  python3 txt_to_csv.py "${parent}/${dir}/${dir}_2.txt" "data_csv_files/${dir}-doc.csv"
+  python3 txt_to_csv.py "${parent}/${dir}/${dir}_2.txt" "data_csv_files/${dir}-pat.csv"
+  echo "create ${dir}"
 done
 
 echo 'done'

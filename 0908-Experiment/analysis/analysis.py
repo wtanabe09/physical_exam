@@ -8,8 +8,9 @@ import elbow_angle
 # 実行例: python3 analysis.py data_csv_files/20230908111226366962_1.csv result_files/20230908111226366962_1.csv
 # 座標取得する際に左右反転されている．右手の座標を見たい場合，左手の座標を見る．
 input_csv = sys.argv[1]
+result_csv_path = sys.argv[2]
 base_name = os.path.splitext(os.path.basename(input_csv))[0]
-result_csv_path = 'result_csv_files/' + base_name + '.csv'
+
 
 with open(input_csv) as file:
   is_action = False
@@ -38,28 +39,28 @@ with open(input_csv) as file:
     # 計算：肘角度
     elbow = elbow_angle.calc_elbow_angle(doctor_right_shoulder, doctor_right_elbow, doctor_right_wrist)
 
-    if is_action:
-      if distance_hand_knee <= threshold:
-        # hand stay
-        count += 1
-      if count >= 60:
-        # 動作終了処理
-        is_action = False
-        print(f"--- end action ---")
-      else:
-        # 動作中処理
-        if distance_hand_knee > threshold:
-          count = 0
-        print(f"short count:{count}, action now")
-    else: # is_action false
-      if distance_hand_knee > threshold:
-        is_action = True
-        count = 0 #2秒のカウント戻す
-        action_number += 1
-        # 動作開始処理
-        print(f"--- start action {action_number} ---")
-      else:
-        print(f"stay hand")
+    # if is_action:
+    #   if distance_hand_knee <= threshold:
+    #     # hand stay
+    #     count += 1
+    #   if count >= 60:
+    #     # 動作終了処理
+    #     is_action = False
+    #     print(f"--- end action ---")
+    #   else:
+    #     # 動作中処理
+    #     if distance_hand_knee > threshold:
+    #       count = 0
+    #     print(f"short count:{count}, action now")
+    # else: # is_action false
+    #   if distance_hand_knee > threshold:
+    #     is_action = True
+    #     count = 0 #2秒のカウント戻す
+    #     action_number += 1
+    #     # 動作開始処理
+    #     print(f"--- start action {action_number} ---")
+    #   else:
+    #     print(f"stay hand")
 
     row_counter += 1
     # create output array for csv file
