@@ -6,23 +6,21 @@ import numpy as np
 # input_csv = sys.argv[1] #csv ファイルセレクト
 # output_csv_path = sys.argv[2]
 
+def calc_angle(shoulder, elbow, wrist):
+  elbow_shoulder = shoulder - elbow # ベクトル
+  elbow_wrist = wrist - elbow # ベクトル
 
-def calc_elbow_angle(shoulder, elbow, wrist):
-  elbow_to_shoulder = shoulder - elbow # ベクトル
-  elbow_to_wrist = wrist - elbow # ベクトル
+  dot_product = np.dot(elbow_shoulder, elbow_wrist)
 
-  dot_product = np.dot(elbow_to_shoulder, elbow_to_wrist)
+  norm_elbow_shoulder = np.linalg.norm(elbow_shoulder)
+  norm_elbow_wrist = np.linalg.norm(elbow_wrist)
 
-  norm_elbow_to_shoulder = np.linalg.norm(elbow_to_shoulder)
-  norm_elbow_to_wrist = np.linalg.norm(elbow_to_wrist)
-
-  cos_theta = dot_product / (norm_elbow_to_shoulder * norm_elbow_to_wrist)
+  cos_theta = dot_product / (norm_elbow_shoulder * norm_elbow_wrist)
   angle_radians = np.arccos(np.clip(cos_theta, -1.0, 1.0))
 
-  # ラジアンから度に変換
-  angle_degrees = math.degrees(angle_radians)
-  
+  angle_degrees = math.degrees(angle_radians) # ラジアンから度に変換
   return 180 - angle_degrees
+
 
 # with open(input_csv) as file:
 #   for line in file:
