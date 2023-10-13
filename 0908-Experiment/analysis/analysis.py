@@ -5,7 +5,7 @@ import sys
 import os
 import math
 import numpy as np
-import elbow_angle
+import feature_calc
 
 input_csv = sys.argv[1]
 result_csv_path = sys.argv[2]
@@ -13,7 +13,7 @@ base_name = os.path.splitext(os.path.basename(input_csv))[0]
 
 
 with open(input_csv) as file:
-  is_action = False
+  bool_action_now = False
   row_counter = 0
   short_distance_count = 0
   action_number = 0
@@ -24,7 +24,7 @@ with open(input_csv) as file:
   for line in file:
     input_arr = line.split(",")
     # 右手（左手のインデックス）
-    x_doctor_right_hand = float(input_arr[(19*2)+1])
+    right_hand_x_doctor = float(input_arr[(19*2)+1])
     y_doctor_right_hand = float(input_arr[(19*2)+2])
     # 右膝（左膝のインデックス）
     x_doctor_right_knee = float(input_arr[(25*2)+2])
@@ -35,24 +35,24 @@ with open(input_csv) as file:
     doctor_right_wrist = np.array([float(input_arr[(15*2)+1]), float(input_arr[(15*2)+2])]) # 右手首
 
     # 計算：右手から右膝までの距離
-    distance_hand_knee = math.sqrt((x_doctor_right_hand - x_doctor_right_knee)**2 + (y_doctor_right_hand - y_doctor_right_knee)**2)
+    hand_knee_distance = math.sqrt((x_doctor_right_hand - x_doctor_right_knee)**2 + (y_doctor_right_hand - y_doctor_right_knee)**2)
     # 計算：肘角度
-    elbow = elbow_angle.calc_elbow_angle(doctor_right_shoulder, doctor_right_elbow, doctor_right_wrist)
+    elbow_angle = feature_calc.calc_elbow_angle(doctor_right_shoulder, doctor_right_elbow, doctor_right_wrist)
 
-    if is_action: # 動作中
-      if distance_hand_knee > threshold: # 閾値より大きいなら動作中，何もしない．
+    if bool_action_now: # 動作中
+      if hand_knee_distance > threshold: # 閾値より大きいなら動作中，何もしない．
         short_distance_count = 0
       else: # 閾値以下なら手を膝に置いている．以下で膝に置いている時間が３秒以上続いているか確認する．
         short_distance_count += 1
         if short_distance_count >= 60: # 閾値以下 3秒以上続いたら動作終了処理
-          is_action = False
+          bool_action_now = False
           print(f"--- end action ---")
         else: # 動作継続
           print(f"action now, short count:{short_distance_count}")
 
-    else: # Not 動作中
-      if distance_hand_knee > threshold: # 手が膝から離れたら動作開始
-        is_action = True
+    else: # Not 動作
+      if hand_knee_distance > threshold: # 手が膝から離れたら動作開始
+        bool_action_now = True
         short_distance_count = 0
         action_number += 1
         print(f"--- start action {action_number} ---")
@@ -62,7 +62,7 @@ with open(input_csv) as file:
     row_counter += 1
     
     # create output array for csv file
-    result_arr = [round(row_counter/20, 2), is_action, distance_hand_knee, elbow] #video time into first col
+    result_arr = [round(row_counter/20, 2), bool_action_now, hand_knee_distance, elbow_angle] #video time into first col
     result_csv = np.vstack((result_csv, result_arr))
 
 np.savetxt(result_csv_path, result_csv, delimiter = ',',fmt="%s")

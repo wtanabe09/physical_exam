@@ -3,7 +3,7 @@ import os
 import math
 from matplotlib import pyplot
 import numpy as np
-import elbow_angle
+import feature_calc
 
 # 実行例: python3 analysis.py data_csv_files/20230908111226366962_1.csv result_files/20230908111226366962_1.csv
 # 座標取得する際に左右反転されている．右手の座標を見たい場合，左手の座標を見る．
@@ -62,7 +62,7 @@ with open(input_csv) as file:
     # 計算：右手から右膝までの距離
     distance_hand_knee = math.sqrt((x_doctor_right_hand - x_doctor_right_knee)**2 + (y_doctor_right_hand - y_doctor_right_knee)**2)
     # 計算：肘角度
-    elbow = elbow_angle.calc_elbow_angle(doctor_right_shoulder, doctor_right_elbow, doctor_right_wrist)
+    elbow = feature_calc.calc_elbow_angle(doctor_right_shoulder, doctor_right_elbow, doctor_right_wrist)
 
     action_status(is_action, distance_hand_knee)
 
