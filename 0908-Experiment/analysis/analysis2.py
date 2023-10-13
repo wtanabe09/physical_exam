@@ -3,7 +3,7 @@ import os
 import math
 from matplotlib import pyplot
 import numpy as np
-import feature_calc
+import calc_feature
 
 # 実行例: python3 analysis.py data_csv_files/20230908111226366962_1.csv result_files/20230908111226366962_1.csv
 # 座標取得する際に左右反転されている．右手の座標を見たい場合，左手の座標を見る．
