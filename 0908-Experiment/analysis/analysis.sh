@@ -12,7 +12,8 @@ data_files=`ls $data_parent`
 
 for file in $data_files; do
   python3 analysis.py "data_csv_files/${file##*/}" "feature_csv_files/${file##*/}"
-  python3 plot.py "feature_csv_files/${file##*/}"
+  python3 plot.py "feature_csv_files/${file##*/}" "0" # 特徴量1をプロット
+  python3 plot.py "feature_csv_files/${file##*/}" "1" # 特徴量2をプロット
   echo "created ${file##*/}"
 done
 

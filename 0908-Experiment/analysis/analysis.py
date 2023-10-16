@@ -18,13 +18,13 @@ with open(input_csv) as file:
   short_distance_count = 0
   action_number = 0
   threshold = 45
-  result_arr = np.zeros(4) # real_time, video_time, hand_knee_distance, is_action
-  result_csv = np.empty((0,4))
+  result_arr = np.zeros(5) # real_time, video_time, hand_knee_distance, is_action
+  result_csv = np.empty((0,5))
 
   for line in file:
     input_arr = line.split(",")
-    # 右手（左手のインデックス）
-    right_hand_doctor = np.array([float(input_arr[(19*2)+1]), float(input_arr[(19*2)+2])])
+    # 右手人差し指（左手のインデックス）
+    right_index_doctor = np.array([float(input_arr[(19*2)+1]), float(input_arr[(19*2)+2])])
     # 右膝（左膝のインデックス）
     right_knee_doctor = np.array([float(input_arr[(25*2)+1]), float(input_arr[(25*2)+2])])
     # 医者の右肩，右肘，右手首
@@ -32,8 +32,9 @@ with open(input_csv) as file:
     right_elbow_doctor = np.array([float(input_arr[(13*2)+1]), float(input_arr[(13*2)+2])]) # 右肘
     right_wrist_doctor = np.array([float(input_arr[(15*2)+1]), float(input_arr[(15*2)+2])]) # 右手首
 
-    hand_knee_distance = calc_feature.distance(right_hand_doctor, right_knee_doctor) # 計算：右手から右膝までの距離
+    hand_knee_distance = calc_feature.distance(right_index_doctor, right_knee_doctor) # 計算：右手から右膝までの距離
     elbow_angle = calc_feature.inner_product(right_shoulder_doctor, right_elbow_doctor, right_wrist_doctor) # 計算：肘角度
+    wrist_angle = calc_feature.inner_product(right_elbow_doctor, right_wrist_doctor, right_index_doctor) # 計算：手首の角度
 
     if bool_action_now: # 動作中
       if hand_knee_distance > threshold: # 閾値より大きいなら動作中，何もしない．
@@ -60,7 +61,7 @@ with open(input_csv) as file:
     row_counter += 1
     
     # create output array for csv file
-    result_arr = [round(row_counter/20, 2), bool_action_now, hand_knee_distance, elbow_angle] # 一列目：動画の時間
+    result_arr = [round(row_counter/20, 2), bool_action_now, hand_knee_distance, elbow_angle, wrist_angle] # 一列目：動画の時間
     result_csv = np.vstack((result_csv, result_arr))
 
 np.savetxt(result_csv_path, result_csv, delimiter = ',',fmt="%s")
