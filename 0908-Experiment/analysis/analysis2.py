@@ -1,75 +1,102 @@
 import sys
 import os
-import math
-from matplotlib import pyplot
 import numpy as np
-import calc_feature
+from calc_feature import distance, inner_product
 
-# 実行例: python3 analysis.py data_csv_files/20230908111226366962_1.csv result_files/20230908111226366962_1.csv
-# 座標取得する際に左右反転されている．右手の座標を見たい場合，左手の座標を見る．
-input_csv = sys.argv[1]
-result_csv_path = sys.argv[2]
-base_name = os.path.splitext(os.path.basename(input_csv))[0]
+def calc_doctor_feature(doc_arr):
+    right_index = np.array([float(doc_arr[(19*2)+1]), float(doc_arr[(19*2)+2])])
+    right_knee = np.array([float(doc_arr[(25*2)+1]), float(doc_arr[(25*2)+2])])
+    right_shoulder = np.array([float(doc_arr[(11*2)+1]), float(doc_arr[(11*2)+2])]) # 右肩（左肩インデックス）
+    right_elbow = np.array([float(doc_arr[(13*2)+1]), float(doc_arr[(13*2)+2])]) # 右肘
+    right_wrist = np.array([float(doc_arr[(15*2)+1]), float(doc_arr[(15*2)+2])]) # 右手首
+
+    hand_knee_distance = distance(right_index, right_knee) # 計算：右手から右膝までの距離
+    elbow_angle = inner_product(right_shoulder, right_elbow, right_wrist) # 計算：肘角度
+    wrist_angle = inner_product(right_elbow, right_wrist, right_index) # 計算：手首の角度
+
+    return hand_knee_distance, elbow_angle, wrist_angle
+
+def calc_patient_feature(pat_arr):
+    right_index = np.array([float(pat_arr[(19*2)+1]), float(pat_arr[(19*2)+2])])
+    right_shoulder = np.array([float(pat_arr[(11*2)+1]), float(pat_arr[(11*2)+2])]) # 右肩（左肩インデックス）
+    right_elbow = np.array([float(pat_arr[(13*2)+1]), float(pat_arr[(13*2)+2])]) # 右肘
+    right_wrist = np.array([float(pat_arr[(15*2)+1]), float(pat_arr[(15*2)+2])]) # 右手首
+
+    wrist_angle = inner_product(right_elbow, right_wrist, right_index) # 計算：手首の角度
+
+    return wrist_angle
+
+def calc_pair_feature(doc_arr, pat_arr):
+    doc_right_shoulder = np.array([float(doc_arr[(11*2)+1]), float(doc_arr[(11*2)+2])]) # 右肩（左肩インデックス）
+    pat_right_shoulder = np.array([float(pat_arr[(11*2)+1]), float(pat_arr[(11*2)+2])]) # 右肩（左肩インデックス）
+    doc_right_hip = np.array([float(doc_arr[(23*2)+1]), float(doc_arr[(23*2)+2])]) # 右腰（左肩インデックス）
+    pat_right_hip = np.array([float(pat_arr[(23*2)+1]), float(pat_arr[(23*2)+2])]) # 右腰（左肩インデックス）
+    
+    
+    shoulder_distance = distance(doc_right_shoulder, pat_right_shoulder)
+    hip_distace = distance(doc_right_hip, pat_right_hip)
+
+    return shoulder_distance, hip_distace
 
 
+def main():
+    if len(sys.argv) != 4:
+        print("Usage: python3 analysis.py doctor_csv patient_csv result_csv_path")
+        return
 
-def action_status(is_action, hand_knee):
-  if is_action: # 動作中
-    if hand_knee > threshold:
-      count = 0
-    else:
-      count += 1
-      if count >= 60: # 閾値以下 3秒以上が続いたら動作終了処理
-        is_action = False
-        print(f"--- end action ---")
-      else:
-        # 動作中処理
-        print(f"action now, short count:{count}")
+    doctor_csv = sys.argv[1]
+    patient_csv = sys.argv[2]
+    result_csv_path = sys.argv[3]
+    base_name = os.path.splitext(os.path.basename(doctor_csv))[0]
 
-  else: # Not 動作中
-    if hand_knee > threshold:
-      is_action = True
-      count = 0 #2秒のカウント戻す
-      action_number += 1
-      # 動作開始処理
-      print(f"--- start action, {action_number} ---")
-    else:
-      print(f"stay hand")
+    threshold = 45
+    short_distance_count = 0
+    action_number = 0
+    result_csv = []
 
+    bool_action_now = False
+    row_counter = 0
 
-with open(input_csv) as file:
-  is_action = False
-  row_counter = 0
-  count = 0
-  action_number = 0
-  threshold = 45
-  result_arr = np.zeros(4) # real_time, video_time, hand_knee_distance, is_action
-  result_csv = np.empty((0,4))
+    with open(doctor_csv) as doctor, open(patient_csv) as patient:
+        for doctor_line, patient_line in zip(doctor, patient):
+            doc_line = doctor_line.split(",")
+            pat_line = patient_line.split(",")
 
-  for line in file:
-    input_arr = line.split(",")
-    # 右手（左手のインデックス）
-    x_doctor_right_hand = float(input_arr[(19*2)+1])
-    y_doctor_right_hand = float(input_arr[(19*2)+2])
-    # 右膝（左膝のインデックス）
-    x_doctor_right_knee = float(input_arr[(25*2)+2])
-    y_doctor_right_knee = float(input_arr[(25*2)+2])
-    # 医者の右肩，右肘，右手首
-    doctor_right_shoulder = np.array([float(input_arr[(11*2)+1]), float(input_arr[(11*2)+2])]) # 右肩（左肩インデックス）
-    doctor_right_elbow = np.array([float(input_arr[(13*2)+1]), float(input_arr[(13*2)+2])]) # 右肘
-    doctor_right_wrist = np.array([float(input_arr[(15*2)+1]), float(input_arr[(15*2)+2])]) # 右手首
+            doc_hand_knee_distance, doc_elbow_angle, doc_wrist_angle = calc_doctor_feature(doc_line)
+            pat_wrist_angle = calc_patient_feature(pat_line)
+            pair_shoulder_distance, pair_hip_distance = calc_pair_feature(doc_line, pat_line)
 
-    # 計算：右手から右膝までの距離
-    distance_hand_knee = math.sqrt((x_doctor_right_hand - x_doctor_right_knee)**2 + (y_doctor_right_hand - y_doctor_right_knee)**2)
-    # 計算：肘角度
-    elbow = feature_calc.calc_elbow_angle(doctor_right_shoulder, doctor_right_elbow, doctor_right_wrist)
+            if bool_action_now: # 動作中
+                if doc_hand_knee_distance > threshold: # 閾値より大きいなら動作中，何もしない．
+                    short_distance_count = 0
+                else: # 閾値以下なら手を膝に置いている．以下で膝に置いている時間が３秒以上続いているか確認する．
+                    short_distance_count += 1
+                    if short_distance_count >= 60: # 閾値以下 3秒以上続いたら動作終了処理
+                        bool_action_now = False
+                        action_number += 1
+            else: # Not 動作
+                if doc_hand_knee_distance > threshold: # 手が膝から離れたら動作開始
+                    bool_action_now = True
+                    short_distance_count = 0
+                    action_number += 1
 
-    action_status(is_action, distance_hand_knee)
+            row_counter += 1
 
-    row_counter += 1
-    # create output array for csv file
-    result_arr = [round(row_counter/20, 2), is_action, distance_hand_knee, elbow] #video time into first col
-    result_csv = np.vstack((result_csv, result_arr))
+            result_arr = np.array([
+                round(row_counter / 20, 2),
+                bool_action_now,
+                doc_hand_knee_distance,
+                doc_elbow_angle,
+                doc_wrist_angle,
+                pat_wrist_angle,
+                pair_shoulder_distance,
+                pair_hip_distance
+            ], dtype=float)
 
-np.savetxt(result_csv_path, result_csv, delimiter = ',',fmt="%s")
+            result_csv.append(result_arr)
 
+    np.savetxt(result_csv_path, result_csv, delimiter=',', fmt="%s")
+    # print("done")
+
+if __name__ == "__main__":
+    main()

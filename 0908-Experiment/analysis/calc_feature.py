@@ -21,10 +21,11 @@ def inner_product(point_a,  point_o, point_b): # ３点のx,y座標の配列
   angle_degrees = math.degrees(angle_radians) # ラジアンから度に変換
   return 180 - angle_degrees
 
-
 def distance(point_a, point_b):
   return math.sqrt((point_a[0] - point_b[0])**2 + (point_a[1] - point_b[1])**2)
 
+# def x_distance(point_a, point_b):
+#   return 
 
   
 

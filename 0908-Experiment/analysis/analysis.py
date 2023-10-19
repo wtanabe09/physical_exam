@@ -7,21 +7,22 @@ import math
 import numpy as np
 import calc_feature
 
-input_csv = sys.argv[1]
-result_csv_path = sys.argv[2]
-base_name = os.path.splitext(os.path.basename(input_csv))[0]
+doctor_csv = sys.argv[1]
+patient_csv = sys.argv[2]
+result_csv_path = sys.argv[3]
+base_name = os.path.splitext(os.path.basename(doctor_csv))[0]
 
 
-with open(input_csv) as file:
+with open(doctor_csv) as doctor, open(patient_csv) as patient:
   bool_action_now = False
   row_counter = 0
   short_distance_count = 0
   action_number = 0
   threshold = 45
-  result_arr = np.zeros(5) # real_time, video_time, hand_knee_distance, is_action
+  result_arr = np.zeros(5) # real_time, video_time, hand_knee_distance, bool_action
   result_csv = np.empty((0,5))
 
-  for line in file:
+  for line in doctor:
     input_arr = line.split(",")
     # 右手人差し指（左手のインデックス）
     right_index_doctor = np.array([float(input_arr[(19*2)+1]), float(input_arr[(19*2)+2])])
@@ -47,7 +48,6 @@ with open(input_csv) as file:
         else: # 動作継続
           pass
           # print(f"action now, short count:{short_distance_count}")
-
     else: # Not 動作
       if hand_knee_distance > threshold: # 手が膝から離れたら動作開始
         bool_action_now = True
