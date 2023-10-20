@@ -1,7 +1,7 @@
 import sys
 import os
 import numpy as np
-from calc_feature import distance, inner_product
+from calc_feature import distance, inner_product, x_distance
 
 def calc_doctor_feature(doc_arr):
     right_index = np.array([float(doc_arr[(19*2)+1]), float(doc_arr[(19*2)+2])])
@@ -22,21 +22,26 @@ def calc_patient_feature(pat_arr):
     right_elbow = np.array([float(pat_arr[(13*2)+1]), float(pat_arr[(13*2)+2])]) # 右肘
     right_wrist = np.array([float(pat_arr[(15*2)+1]), float(pat_arr[(15*2)+2])]) # 右手首
 
+    elbow_angle = inner_product(right_shoulder, right_elbow, right_wrist) # 計算：手首の角度
     wrist_angle = inner_product(right_elbow, right_wrist, right_index) # 計算：手首の角度
 
-    return wrist_angle
+    return wrist_angle, elbow_angle
 
 def calc_pair_feature(doc_arr, pat_arr):
+    doc_nose = np.array([float(doc_arr[(0*2)+1]), float(doc_arr[(0*2)+2])]) # 鼻
     doc_right_shoulder = np.array([float(doc_arr[(11*2)+1]), float(doc_arr[(11*2)+2])]) # 右肩（左肩インデックス）
-    pat_right_shoulder = np.array([float(pat_arr[(11*2)+1]), float(pat_arr[(11*2)+2])]) # 右肩（左肩インデックス）
     doc_right_hip = np.array([float(doc_arr[(23*2)+1]), float(doc_arr[(23*2)+2])]) # 右腰（左肩インデックス）
+
+    pat_nose = np.array([float(pat_arr[(0*2)+1]), float(pat_arr[(0*2)+2])]) # 鼻
+    pat_right_shoulder = np.array([float(pat_arr[(11*2)+1]), float(pat_arr[(11*2)+2])]) # 右肩（左肩インデックス）
     pat_right_hip = np.array([float(pat_arr[(23*2)+1]), float(pat_arr[(23*2)+2])]) # 右腰（左肩インデックス）
     
     
-    shoulder_distance = distance(doc_right_shoulder, pat_right_shoulder)
-    hip_distace = distance(doc_right_hip, pat_right_hip)
+    face_x_distance = x_distance(doc_nose, pat_nose)
+    shoulder_distance = x_distance(doc_right_shoulder, pat_right_shoulder)
+    hip_distace = x_distance(doc_right_hip, pat_right_hip)
 
-    return shoulder_distance, hip_distace
+    return shoulder_distance, hip_distace, face_x_distance
 
 
 def main():
@@ -47,7 +52,6 @@ def main():
     doctor_csv = sys.argv[1]
     patient_csv = sys.argv[2]
     result_csv_path = sys.argv[3]
-    base_name = os.path.splitext(os.path.basename(doctor_csv))[0]
 
     threshold = 45
     short_distance_count = 0
@@ -63,8 +67,8 @@ def main():
             pat_line = patient_line.split(",")
 
             doc_hand_knee_distance, doc_elbow_angle, doc_wrist_angle = calc_doctor_feature(doc_line)
-            pat_wrist_angle = calc_patient_feature(pat_line)
-            pair_shoulder_distance, pair_hip_distance = calc_pair_feature(doc_line, pat_line)
+            pat_elbow_angle, pat_wrist_angle = calc_patient_feature(pat_line)
+            pair_shoulder_distance, pair_hip_distance, pair_nose_distance = calc_pair_feature(doc_line, pat_line)
 
             if bool_action_now: # 動作中
                 if doc_hand_knee_distance > threshold: # 閾値より大きいなら動作中，何もしない．
@@ -85,12 +89,17 @@ def main():
             result_arr = np.array([
                 round(row_counter / 20, 2),
                 bool_action_now,
+
                 doc_hand_knee_distance,
                 doc_elbow_angle,
                 doc_wrist_angle,
+
+                pat_elbow_angle,
                 pat_wrist_angle,
+
                 pair_shoulder_distance,
-                pair_hip_distance
+                pair_hip_distance,
+                pair_nose_distance
             ], dtype=float)
 
             result_csv.append(result_arr)
