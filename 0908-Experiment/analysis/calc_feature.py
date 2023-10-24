@@ -27,6 +27,9 @@ def distance(point_a, point_b):
 def x_distance(point_a, point_b):
   return point_a[0] - point_b[0]
 
+def distance_normalize(distance_feature):
+  return 
+
   
 
 

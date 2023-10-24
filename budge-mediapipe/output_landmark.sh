@@ -1,10 +1,12 @@
 #!/bin/sh
 
-files=`ls ../input_files`
-echo $files
+input=$@ # ../0724cut_videos/*.mp4
+files=`ls $input`
 
 for file in $files; do
-  python3 analysis.py `../$file`
+  base=`basename $file .mp4`
+  dir=`dirname $file`
+  python3 coordinate_output.py "${file}" "${dir}/point_csv/${base}.csv"
 done
 
 echo prosess is done
