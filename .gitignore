@@ -1,4 +1,6 @@
 .DS_Store
 *.mp4
-/0724-Confidential/
+/0724-Confidential/*.mp4
+/0724-Confidential/crop
+/0724-COnfidential/feature_video
 /0908-Experiment/other_cam_result/5-cam-video/*.mp4
