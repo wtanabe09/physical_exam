@@ -45,11 +45,11 @@ with mp_holistic.Holistic(
     data_land2 = np.zeros((1,3))
     
     for i in range (0,33):
-        if results.pose_landmarks != 'NoneType':
+        try:
           data1 = results.pose_landmarks.landmark[i].x
           data2 = results.pose_landmarks.landmark[i].y
           data3 = results.pose_landmarks.landmark[i].z
-        else:
+        except AttributeError:
           data1 = np.nan
           data2 = np.nan
           data3 = np.nan

@@ -8,10 +8,15 @@ import mediapipe as mp
 from PIL import Image, ImageTk, ImageOps  # 画像データ用
 from utils import CvFpsCalc
 import tkinter as tk
+from tkinter import messagebox
 import matplotlib.pyplot as plt
 import threading
 import datetime
 import time
+import spliter
+import render
+import os
+import synthesis
 
 REC = False
 
@@ -28,6 +33,7 @@ class Application(tk.Frame):
         self.isRec = False
         self.isRec2 = False
         self.REC = False
+        self.choseCamNumber = 10  # ここに使用するカメラの番号を入力 ####################
         self.createWidgets()
         self.main()
         self.update()
@@ -59,11 +65,28 @@ class Application(tk.Frame):
             self.thread1 = threading.Thread(target=self.t1)
             print("ok")
             self.thread1.start()
-            self.button_rec["text"] += "録画停止"
-            self.button_rec["fg"] = "blue"
+            self.button_rec["text"] = "録画停止"
+            self.button_rec["fg"] = "red"
         else:
             self.button_rec["text"] = "録画開始"
-            self.button_rec["fg"] = "red"
+            self.button_rec["fg"] = "blue"
+            messagebox.showinfo("処理中", "しばらくお待ち下さい。")
+            time.sleep(1)
+            spliter.videoTrim(self.name)
+            time.sleep(1)
+            render.main(self.name, self.file_time, 1)
+            render.main(self.name, self.file_time, 2)
+            synthesis.comp(self.name)
+            os.system("mkdir " + self.name)
+            os.system("mv " + self.name + "*.mp4 ./" + self.name + "/")
+            os.system("mv " + self.name + "*.txt ./" + self.name + "/")
+            messagebox.showinfo("完了", "処理が完了しました。")
+            
+    def win2(self):
+        # self.newWindow = tk.Toplevel(self.root)
+        # self.app = Application2(self.newWindow)
+        # self.app.mainloop()
+        os.system("python3 note.py &")
         
     def createWidgets(self):
         self.canvas = tk.Canvas(self.root, width=960, height=540, bg="black")
@@ -81,8 +104,11 @@ class Application(tk.Frame):
         self.button_line = tk.Button(self.frame_buttons, text="姿勢表示", command=self.isLine)
         self.button_line.pack(side="left")
         
-        self.button_rec = tk.Button(self.frame_buttons, text="録画開始", fg="red", command=self.rec)
+        self.button_rec = tk.Button(self.frame_buttons, text="録画開始", fg="blue", command=self.rec)
         self.button_rec.pack(side="left")
+        
+        self.button_analyse = tk.Button(self.frame_buttons, text="録画解析", command=self.win2)
+        self.button_analyse.pack(side="left")
         
         self.button_close = tk.Button(self.frame_buttons, text="閉じる", command=exit)
         self.button_close.pack(side="left")
@@ -91,13 +117,13 @@ class Application(tk.Frame):
         self.label_text.pack()
         
         self.label_position = tk.Label(self.root, text="ここに")
-        self.label_position.pack()
+        # self.label_position.pack()
     
     # デバイスの情報を取得
     def get_args(self):
         parser = argparse.ArgumentParser()
 
-        parser.add_argument("--device", type=int, default=1)
+        parser.add_argument("--device", type=int, default=self.choseCamNumber)
         parser.add_argument("--width", help='cap width', type=int, default=2880)
         parser.add_argument("--height", help='cap height', type=int, default=1080)
 
@@ -278,6 +304,8 @@ class Application(tk.Frame):
         visibility_th=0.5,
     ):
         image_width, image_height = image.shape[1], image.shape[0]
+        radius = 3
+        thick = 1
 
         landmark_point = []
         
@@ -290,109 +318,112 @@ class Application(tk.Frame):
             if landmark.visibility < visibility_th:
                 continue
             
-            if self.on:
-                if index == 0:  # 鼻
-                    cv.circle(image, (landmark_x, landmark_y), 5, (0, 255, 0), 2)
-                    self.label_position["text"] = " 鼻:" + " x:" + str(landmark_x) + "y:" + str(landmark_y)
-                if index == 1:  # 右目：目頭
-                    cv.circle(image, (landmark_x, landmark_y), 5, (0, 255, 0), 2)
-                    self.label_position["text"] += " 右目：目頭:" + " x:" + str(landmark_x) + "y:" + str(landmark_y)
-                if index == 2:  # 右目：瞳
-                    cv.circle(image, (landmark_x, landmark_y), 5, (0, 255, 0), 2)
-                    self.label_position["text"] += " 右目：瞳:" + " x:" + str(landmark_x) + "y:" + str(landmark_y)
-                if index == 3:  # 右目：目尻
-                    cv.circle(image, (landmark_x, landmark_y), 5, (0, 255, 0), 2)
-                    self.label_position["text"] += " 右目：目尻:" + " x:" + str(landmark_x) + "y:" + str(landmark_y)
-                if index == 4:  # 左目：目頭
-                    cv.circle(image, (landmark_x, landmark_y), 5, (0, 255, 0), 2)
-                    self.label_position["text"] += " 左目：目頭:" + " x:" + str(landmark_x) + "y:" + str(landmark_y)
-                if index == 5:  # 左目：瞳
-                    cv.circle(image, (landmark_x, landmark_y), 5, (0, 255, 0), 2)
-                    self.label_position["text"] += " 左目：瞳:" + " x:" + str(landmark_x) + "y:" + str(landmark_y)
-                if index == 6:  # 左目：目尻
-                    cv.circle(image, (landmark_x, landmark_y), 5, (0, 255, 0), 2)
-                    self.label_position["text"] += " 左目：目尻:" + " x:" + str(landmark_x) + "y:" + str(landmark_y)
-                if index == 7:  # 右耳
-                    cv.circle(image, (landmark_x, landmark_y), 5, (0, 255, 0), 2)
-                    self.label_position["text"] += " 右耳:" + " x:" + str(landmark_x) + "y:" + str(landmark_y)
-                if index == 8:  # 左耳
-                    cv.circle(image, (landmark_x, landmark_y), 5, (0, 255, 0), 2)
-                    self.label_position["text"] += " 左耳:" + " x:" + str(landmark_x) + "y:" + str(landmark_y) + "\n"
-                if index == 9:  # 口：右端
-                    cv.circle(image, (landmark_x, landmark_y), 5, (0, 255, 0), 2)
-                    self.label_position["text"] += "  口：右端:" + " x:" + str(landmark_x) + "y:" + str(landmark_y)
-                if index == 10:  # 口：左端
-                    cv.circle(image, (landmark_x, landmark_y), 5, (0, 255, 0), 2)
-                    self.label_position["text"] += " 口：左端:" + " x:" + str(landmark_x) + "y:" + str(landmark_y)
-                if index == 11:  # 右肩
-                    cv.circle(image, (landmark_x, landmark_y), 5, (0, 255, 0), 2)
-                    self.label_position["text"] += " 右肩:" + " x:" + str(landmark_x) + "y:" + str(landmark_y)
-                if index == 12:  # 左肩
-                    cv.circle(image, (landmark_x, landmark_y), 5, (0, 255, 0), 2)
-                    self.label_position["text"] += " 左肩:" + " x:" + str(landmark_x) + "y:" + str(landmark_y)
-                if index == 13:  # 右肘
-                    cv.circle(image, (landmark_x, landmark_y), 5, (0, 255, 0), 2)
-                    self.label_position["text"] += " 右肘:" + " x:" + str(landmark_x) + "y:" + str(landmark_y)
-                if index == 14:  # 左肘
-                    cv.circle(image, (landmark_x, landmark_y), 5, (0, 255, 0), 2)
-                    self.label_position["text"] += " 左肘:" + " x:" + str(landmark_x) + "y:" + str(landmark_y)
-                if index == 15:  # 右手首
-                    cv.circle(image, (landmark_x, landmark_y), 5, (0, 255, 0), 2)
-                    self.label_position["text"] += " 右手首:" + " x:" + str(landmark_x) + "y:" + str(landmark_y)
-                if index == 16:  # 左手首
-                    cv.circle(image, (landmark_x, landmark_y), 5, (0, 255, 0), 2)
-                    self.label_position["text"] += " 左手首:" + " x:" + str(landmark_x) + "y:" + str(landmark_y) + "\n"
-                if index == 17:  # 右手1(外側端)
-                    cv.circle(image, (landmark_x, landmark_y), 5, (0, 255, 0), 2)
-                    self.label_position["text"] += " 右手1(外側端):" + " x:" + str(landmark_x) + "y:" + str(landmark_y)
-                if index == 18:  # 左手1(外側端)
-                    cv.circle(image, (landmark_x, landmark_y), 5, (0, 255, 0), 2)
-                    self.label_position["text"] += " 左手1(外側端):" + " x:" + str(landmark_x) + "y:" + str(landmark_y)
-                if index == 19:  # 右手2(先端)
-                    cv.circle(image, (landmark_x, landmark_y), 5, (0, 255, 0), 2)
-                    self.label_position["text"] += " 右手2(先端):" + " x:" + str(landmark_x) + "y:" + str(landmark_y)
-                if index == 20:  # 左手2(先端)
-                    cv.circle(image, (landmark_x, landmark_y), 5, (0, 255, 0), 2)
-                    self.label_position["text"] += " 左手2(先端):" + " x:" + str(landmark_x) + "y:" + str(landmark_y)
-                if index == 21:  # 右手3(内側端)
-                    cv.circle(image, (landmark_x, landmark_y), 5, (0, 255, 0), 2)
-                    self.label_position["text"] += " 右手3(内側端):" + " x:" + str(landmark_x) + "y:" + str(landmark_y)
-                if index == 22:  # 左手3(内側端)
-                    cv.circle(image, (landmark_x, landmark_y), 5, (0, 255, 0), 2)
-                    self.label_position["text"] += " 左手3(内側端):" + " x:" + str(landmark_x) + "y:" + str(landmark_y)
-                if index == 23:  # 腰(右側)
-                    cv.circle(image, (landmark_x, landmark_y), 5, (0, 255, 0), 2)
-                    self.label_position["text"] += " 腰(右側):" + " x:" + str(landmark_x) + "y:" + str(landmark_y)
-                if index == 24:  # 腰(左側)
-                    cv.circle(image, (landmark_x, landmark_y), 5, (0, 255, 0), 2)
-                    self.label_position["text"] += " 腰(左側):" + " x:" + str(landmark_x) + "y:" + str(landmark_y) + "\n"
-                if index == 25:  # 右ひざ
-                    cv.circle(image, (landmark_x, landmark_y), 5, (0, 255, 0), 2)
-                    self.label_position["text"] += " 右ひざ:" + " x:" + str(landmark_x) + "y:" + str(landmark_y)
-                if index == 26:  # 左ひざ
-                    cv.circle(image, (landmark_x, landmark_y), 5, (0, 255, 0), 2)
-                    self.label_position["text"] += " 左ひざ:" + " x:" + str(landmark_x) + "y:" + str(landmark_y)
-                if index == 27:  # 右足首
-                    cv.circle(image, (landmark_x, landmark_y), 5, (0, 255, 0), 2)
-                    self.label_position["text"] += " 右足首:" + " x:" + str(landmark_x) + "y:" + str(landmark_y)
-                if index == 28:  # 左足首
-                    cv.circle(image, (landmark_x, landmark_y), 5, (0, 255, 0), 2)
-                    self.label_position["text"] += " 左足首:" + " x:" + str(landmark_x) + "y:" + str(landmark_y)
-                if index == 29:  # 右かかと
-                    cv.circle(image, (landmark_x, landmark_y), 5, (0, 255, 0), 2)
-                    self.label_position["text"] += " 右かかと:" + " x:" + str(landmark_x) + "y:" + str(landmark_y)
-                if index == 30:  # 左かかと
-                    cv.circle(image, (landmark_x, landmark_y), 5, (0, 255, 0), 2)
-                    self.label_position["text"] += " 左かかと:" + " x:" + str(landmark_x) + "y:" + str(landmark_y)
-                if index == 31:  # 右つま先
-                    cv.circle(image, (landmark_x, landmark_y), 5, (0, 255, 0), 2)
-                    self.label_position["text"] += " 右つま先:" + " x:" + str(landmark_x) + "y:" + str(landmark_y)
-                if index == 32:  # 左つま先
-                    cv.circle(image, (landmark_x, landmark_y), 5, (0, 255, 0), 2)
-                    self.label_position["text"] += " 左つま先:" + " x:" + str(landmark_x) + "y:" + str(landmark_y)
+            prev = self.label_position["text"]
+            if index == 0:  # 鼻
+                #cv.circle(image, (landmark_x, landmark_y), radius, (0, 255, 0), thick)
+                self.label_position["text"] = " 鼻:" + " x:" + str(landmark_x) + "y:" + str(landmark_y)
+            if index == 1:  # 右目：目頭
+                #cv.circle(image, (landmark_x, landmark_y), radius, (0, 255, 0), thick)
+                self.label_position["text"] += " 右目：目頭:" + " x:" + str(landmark_x) + "y:" + str(landmark_y)
+            if index == 2:  # 右目：瞳
+                #cv.circle(image, (landmark_x, landmark_y), radius, (0, 255, 0), thick)
+                self.label_position["text"] += " 右目：瞳:" + " x:" + str(landmark_x) + "y:" + str(landmark_y)
+            if index == 3:  # 右目：目尻
+                #cv.circle(image, (landmark_x, landmark_y), radius, (0, 255, 0), thick)
+                self.label_position["text"] += " 右目：目尻:" + " x:" + str(landmark_x) + "y:" + str(landmark_y)
+            if index == 4:  # 左目：目頭
+                #cv.circle(image, (landmark_x, landmark_y), radius, (0, 255, 0), thick)
+                self.label_position["text"] += " 左目：目頭:" + " x:" + str(landmark_x) + "y:" + str(landmark_y)
+            if index == 5:  # 左目：瞳
+                #cv.circle(image, (landmark_x, landmark_y), radius, (0, 255, 0), thick)
+                self.label_position["text"] += " 左目：瞳:" + " x:" + str(landmark_x) + "y:" + str(landmark_y)
+            if index == 6:  # 左目：目尻
+                #cv.circle(image, (landmark_x, landmark_y), radius, (0, 255, 0), thick)
+                self.label_position["text"] += " 左目：目尻:" + " x:" + str(landmark_x) + "y:" + str(landmark_y)
+            if index == 7:  # 右耳
+                #cv.circle(image, (landmark_x, landmark_y), radius, (0, 255, 0), thick)
+                self.label_position["text"] += " 右耳:" + " x:" + str(landmark_x) + "y:" + str(landmark_y)
+            if index == 8:  # 左耳
+                #cv.circle(image, (landmark_x, landmark_y), radius, (0, 255, 0), thick)
+                self.label_position["text"] += " 左耳:" + " x:" + str(landmark_x) + "y:" + str(landmark_y) + "\n"
+            if index == 9:  # 口：右端
+                #cv.circle(image, (landmark_x, landmark_y), radius, (0, 255, 0), thick)
+                self.label_position["text"] += "  口：右端:" + " x:" + str(landmark_x) + "y:" + str(landmark_y)
+            if index == 10:  # 口：左端
+                #cv.circle(image, (landmark_x, landmark_y), radius, (0, 255, 0), thick)
+                self.label_position["text"] += " 口：左端:" + " x:" + str(landmark_x) + "y:" + str(landmark_y)
+            if index == 11:  # 右肩
+                cv.circle(image, (landmark_x, landmark_y), radius, (0, 255, 0), thick)
+                self.label_position["text"] += " 右肩:" + " x:" + str(landmark_x) + "y:" + str(landmark_y)
+            if index == 12:  # 左肩
+                cv.circle(image, (landmark_x, landmark_y), radius, (0, 255, 0), thick)
+                self.label_position["text"] += " 左肩:" + " x:" + str(landmark_x) + "y:" + str(landmark_y)
+            if index == 13:  # 右肘
+                cv.circle(image, (landmark_x, landmark_y), radius, (0, 255, 0), thick)
+                self.label_position["text"] += " 右肘:" + " x:" + str(landmark_x) + "y:" + str(landmark_y)
+            if index == 14:  # 左肘
+                cv.circle(image, (landmark_x, landmark_y), radius, (0, 255, 0), thick)
+                self.label_position["text"] += " 左肘:" + " x:" + str(landmark_x) + "y:" + str(landmark_y)
+            if index == 15:  # 右手首
+                cv.circle(image, (landmark_x, landmark_y), radius, (0, 255, 0), thick)
+                self.label_position["text"] += " 右手首:" + " x:" + str(landmark_x) + "y:" + str(landmark_y)
+            if index == 16:  # 左手首
+                cv.circle(image, (landmark_x, landmark_y), radius, (0, 255, 0), thick)
+                self.label_position["text"] += " 左手首:" + " x:" + str(landmark_x) + "y:" + str(landmark_y) + "\n"
+            if index == 17:  # 右手1(外側端)
+                cv.circle(image, (landmark_x, landmark_y), radius, (0, 255, 0), thick)
+                self.label_position["text"] += " 右手1(外側端):" + " x:" + str(landmark_x) + "y:" + str(landmark_y)
+            if index == 18:  # 左手1(外側端)
+                cv.circle(image, (landmark_x, landmark_y), radius, (0, 255, 0), thick)
+                self.label_position["text"] += " 左手1(外側端):" + " x:" + str(landmark_x) + "y:" + str(landmark_y)
+            if index == 19:  # 右手2(先端)
+                cv.circle(image, (landmark_x, landmark_y), radius, (0, 255, 0), thick)
+                self.label_position["text"] += " 右手2(先端):" + " x:" + str(landmark_x) + "y:" + str(landmark_y)
+            if index == 20:  # 左手2(先端)
+                cv.circle(image, (landmark_x, landmark_y), radius, (0, 255, 0), thick)
+                self.label_position["text"] += " 左手2(先端):" + " x:" + str(landmark_x) + "y:" + str(landmark_y)
+            if index == 21:  # 右手3(内側端)
+                cv.circle(image, (landmark_x, landmark_y), radius, (0, 255, 0), thick)
+                self.label_position["text"] += " 右手3(内側端):" + " x:" + str(landmark_x) + "y:" + str(landmark_y)
+            if index == 22:  # 左手3(内側端)
+                cv.circle(image, (landmark_x, landmark_y), radius, (0, 255, 0), thick)
+                self.label_position["text"] += " 左手3(内側端):" + " x:" + str(landmark_x) + "y:" + str(landmark_y)
+            if index == 23:  # 腰(右側)
+                cv.circle(image, (landmark_x, landmark_y), radius, (0, 255, 0), thick)
+                self.label_position["text"] += " 腰(右側):" + " x:" + str(landmark_x) + "y:" + str(landmark_y)
+            if index == 24:  # 腰(左側)
+                cv.circle(image, (landmark_x, landmark_y), radius, (0, 255, 0), thick)
+                self.label_position["text"] += " 腰(左側):" + " x:" + str(landmark_x) + "y:" + str(landmark_y) + "\n"
+            if index == 25:  # 右ひざ
+                cv.circle(image, (landmark_x, landmark_y), radius, (0, 255, 0), thick)
+                self.label_position["text"] += " 右ひざ:" + " x:" + str(landmark_x) + "y:" + str(landmark_y)
+            if index == 26:  # 左ひざ
+                cv.circle(image, (landmark_x, landmark_y), radius, (0, 255, 0), thick)
+                self.label_position["text"] += " 左ひざ:" + " x:" + str(landmark_x) + "y:" + str(landmark_y)
+            if index == 27:  # 右足首
+                cv.circle(image, (landmark_x, landmark_y), radius, (0, 255, 0), thick)
+                self.label_position["text"] += " 右足首:" + " x:" + str(landmark_x) + "y:" + str(landmark_y)
+            if index == 28:  # 左足首
+                cv.circle(image, (landmark_x, landmark_y), radius, (0, 255, 0), thick)
+                self.label_position["text"] += " 左足首:" + " x:" + str(landmark_x) + "y:" + str(landmark_y)
+            if index == 29:  # 右かかと
+                cv.circle(image, (landmark_x, landmark_y), radius, (0, 255, 0), thick)
+                self.label_position["text"] += " 右かかと:" + " x:" + str(landmark_x) + "y:" + str(landmark_y)
+            if index == 30:  # 左かかと
+                cv.circle(image, (landmark_x, landmark_y), radius, (0, 255, 0), thick)
+                self.label_position["text"] += " 左かかと:" + " x:" + str(landmark_x) + "y:" + str(landmark_y)
+            if index == 31:  # 右つま先
+                cv.circle(image, (landmark_x, landmark_y), radius, (0, 255, 0), thick)
+                self.label_position["text"] += " 右つま先:" + " x:" + str(landmark_x) + "y:" + str(landmark_y)
+            if index == 32:  # 左つま先
+                cv.circle(image, (landmark_x, landmark_y), radius, (0, 255, 0), thick)
+                self.label_position["text"] += " 左つま先:" + " x:" + str(landmark_x) + "y:" + str(landmark_y)
+                
+            if not self.on:
+                self.label_position["text"] = prev
 
             # if not upper_body_only:
-            if True:
+            if False:
                 cv.putText(image, "z:" + str(round(landmark_z, 3)),
                         (landmark_x - 10, landmark_y - 10),
                         cv.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 1,
@@ -400,143 +431,144 @@ class Application(tk.Frame):
 
         if len(landmark_point) > 0:
             # 右目
-            if landmark_point[1][0] > visibility_th and landmark_point[2][
-                    0] > visibility_th:
-                cv.line(image, landmark_point[1][1], landmark_point[2][1],
-                        (0, 255, 0), 2)
-            if landmark_point[2][0] > visibility_th and landmark_point[3][
-                    0] > visibility_th:
-                cv.line(image, landmark_point[2][1], landmark_point[3][1],
-                        (0, 255, 0), 2)
+            #if landmark_point[1][0] > visibility_th and landmark_point[2][
+            #        0] > visibility_th:
+                #cv.line(image, landmark_point[1][1], landmark_point[2][1],
+                #        (0, 255, 0), thick)
+            #if landmark_point[2][0] > visibility_th and landmark_point[3][
+            #        0] > visibility_th:
+                #cv.line(image, landmark_point[2][1], landmark_point[3][1],
+                #        (0, 255, 0), thick)
 
             # 左目
-            if landmark_point[4][0] > visibility_th and landmark_point[5][
-                    0] > visibility_th:
-                cv.line(image, landmark_point[4][1], landmark_point[5][1],
-                        (0, 255, 0), 2)
-            if landmark_point[5][0] > visibility_th and landmark_point[6][
-                    0] > visibility_th:
-                cv.line(image, landmark_point[5][1], landmark_point[6][1],
-                        (0, 255, 0), 2)
+            #if landmark_point[4][0] > visibility_th and landmark_point[5][
+            #        0] > visibility_th:
+                #cv.line(image, landmark_point[4][1], landmark_point[5][1],
+                #        (0, 255, 0), thick)
+            #if landmark_point[5][0] > visibility_th and landmark_point[6][
+            #        0] > visibility_th:
+                #cv.line(image, landmark_point[5][1], landmark_point[6][1],
+                #        (0, 255, 0), thick)
 
             # 口
-            if landmark_point[9][0] > visibility_th and landmark_point[10][
-                    0] > visibility_th:
-                cv.line(image, landmark_point[9][1], landmark_point[10][1],
-                        (0, 255, 0), 2)
+            #if landmark_point[9][0] > visibility_th and landmark_point[10][
+            #        0] > visibility_th:
+                #cv.line(image, landmark_point[9][1], landmark_point[10][1],
+                #        (0, 255, 0), thick)
 
             # 肩
             if landmark_point[11][0] > visibility_th and landmark_point[12][
                     0] > visibility_th:
                 cv.line(image, landmark_point[11][1], landmark_point[12][1],
-                        (0, 255, 0), 2)
+                        (0, 255, 0), thick)
 
             # 右腕
             if landmark_point[11][0] > visibility_th and landmark_point[13][
                     0] > visibility_th:
                 cv.line(image, landmark_point[11][1], landmark_point[13][1],
-                        (0, 255, 0), 2)
+                        (0, 255, 0), thick)
             if landmark_point[13][0] > visibility_th and landmark_point[15][
                     0] > visibility_th:
                 cv.line(image, landmark_point[13][1], landmark_point[15][1],
-                        (0, 255, 0), 2)
+                        (0, 255, 0), thick)
 
             # 左腕
             if landmark_point[12][0] > visibility_th and landmark_point[14][
                     0] > visibility_th:
                 cv.line(image, landmark_point[12][1], landmark_point[14][1],
-                        (0, 255, 0), 2)
+                        (0, 255, 0), thick)
             if landmark_point[14][0] > visibility_th and landmark_point[16][
                     0] > visibility_th:
                 cv.line(image, landmark_point[14][1], landmark_point[16][1],
-                        (0, 255, 0), 2)
+                        (0, 255, 0), thick)
 
             # 右手
-            if landmark_point[15][0] > visibility_th and landmark_point[17][
-                    0] > visibility_th:
-                cv.line(image, landmark_point[15][1], landmark_point[17][1],
-                        (0, 255, 0), 2)
-            if landmark_point[17][0] > visibility_th and landmark_point[19][
-                    0] > visibility_th:
-                cv.line(image, landmark_point[17][1], landmark_point[19][1],
-                        (0, 255, 0), 2)
-            if landmark_point[19][0] > visibility_th and landmark_point[21][
-                    0] > visibility_th:
-                cv.line(image, landmark_point[19][1], landmark_point[21][1],
-                        (0, 255, 0), 2)
-            if landmark_point[21][0] > visibility_th and landmark_point[15][
-                    0] > visibility_th:
-                cv.line(image, landmark_point[21][1], landmark_point[15][1],
-                        (0, 255, 0), 2)
+            #if landmark_point[15][0] > visibility_th and landmark_point[17][
+            #        0] > visibility_th:
+                #cv.line(image, landmark_point[15][1], landmark_point[17][1],
+                #        (0, 255, 0), thick)
+            #if landmark_point[17][0] > visibility_th and landmark_point[19][
+            #        0] > visibility_th:
+                #cv.line(image, landmark_point[17][1], landmark_point[19][1],
+                #        (0, 255, 0), thick)
+            #if landmark_point[19][0] > visibility_th and landmark_point[21][
+            #        0] > visibility_th:
+                #cv.line(image, landmark_point[19][1], landmark_point[21][1],
+                #        (0, 255, 0), thick)
+            #if landmark_point[21][0] > visibility_th and landmark_point[15][
+            #        0] > visibility_th:
+                #cv.line(image, landmark_point[21][1], landmark_point[15][1],
+                #        (0, 255, 0), thick)
 
             # 左手
-            if landmark_point[16][0] > visibility_th and landmark_point[18][
-                    0] > visibility_th:
-                cv.line(image, landmark_point[16][1], landmark_point[18][1],
-                        (0, 255, 0), 2)
-            if landmark_point[18][0] > visibility_th and landmark_point[20][
-                    0] > visibility_th:
-                cv.line(image, landmark_point[18][1], landmark_point[20][1],
-                        (0, 255, 0), 2)
-            if landmark_point[20][0] > visibility_th and landmark_point[22][
-                    0] > visibility_th:
-                cv.line(image, landmark_point[20][1], landmark_point[22][1],
-                        (0, 255, 0), 2)
-            if landmark_point[22][0] > visibility_th and landmark_point[16][
-                    0] > visibility_th:
-                cv.line(image, landmark_point[22][1], landmark_point[16][1],
-                        (0, 255, 0), 2)
+            #if landmark_point[16][0] > visibility_th and landmark_point[18][
+            #        0] > visibility_th:
+                #cv.line(image, landmark_point[16][1], landmark_point[18][1],
+                #        (0, 255, 0), thick)
+            #if landmark_point[18][0] > visibility_th and landmark_point[20][
+            #        0] > visibility_th:
+                #cv.line(image, landmark_point[18][1], landmark_point[20][1],
+                #        (0, 255, 0), thick)
+            #if landmark_point[20][0] > visibility_th and landmark_point[22][
+            #        0] > visibility_th:
+                #cv.line(image, landmark_point[20][1], landmark_point[22][1],
+                #        (0, 255, 0), thick)
+            #if landmark_point[22][0] > visibility_th and landmark_point[16][
+            #        0] > visibility_th:
+                #cv.line(image, landmark_point[22][1], landmark_point[16][1],
+                #        (0, 255, 0), thick)
 
             # 胴体
             if landmark_point[11][0] > visibility_th and landmark_point[23][
                     0] > visibility_th:
                 cv.line(image, landmark_point[11][1], landmark_point[23][1],
-                        (0, 255, 0), 2)
+                        (0, 255, 0), thick)
             if landmark_point[12][0] > visibility_th and landmark_point[24][
                     0] > visibility_th:
                 cv.line(image, landmark_point[12][1], landmark_point[24][1],
-                        (0, 255, 0), 2)
+                        (0, 255, 0), thick)
             if landmark_point[23][0] > visibility_th and landmark_point[24][
                     0] > visibility_th:
                 cv.line(image, landmark_point[23][1], landmark_point[24][1],
-                        (0, 255, 0), 2)
+                        (0, 255, 0), thick)
 
             if len(landmark_point) > 25:
                 # 右足
                 if landmark_point[23][0] > visibility_th and landmark_point[25][
                         0] > visibility_th:
                     cv.line(image, landmark_point[23][1], landmark_point[25][1],
-                            (0, 255, 0), 2)
+                            (0, 255, 0), thick)
                 if landmark_point[25][0] > visibility_th and landmark_point[27][
                         0] > visibility_th:
                     cv.line(image, landmark_point[25][1], landmark_point[27][1],
-                            (0, 255, 0), 2)
+                            (0, 255, 0), thick)
                 if landmark_point[27][0] > visibility_th and landmark_point[29][
                         0] > visibility_th:
                     cv.line(image, landmark_point[27][1], landmark_point[29][1],
-                            (0, 255, 0), 2)
+                            (0, 255, 0), thick)
                 if landmark_point[29][0] > visibility_th and landmark_point[31][
                         0] > visibility_th:
                     cv.line(image, landmark_point[29][1], landmark_point[31][1],
-                            (0, 255, 0), 2)
+                            (0, 255, 0), thick)
 
                 # 左足
                 if landmark_point[24][0] > visibility_th and landmark_point[26][
                         0] > visibility_th:
                     cv.line(image, landmark_point[24][1], landmark_point[26][1],
-                            (0, 255, 0), 2)
+                            (0, 255, 0), thick)
                 if landmark_point[26][0] > visibility_th and landmark_point[28][
                         0] > visibility_th:
                     cv.line(image, landmark_point[26][1], landmark_point[28][1],
-                            (0, 255, 0), 2)
+                            (0, 255, 0), thick)
                 if landmark_point[28][0] > visibility_th and landmark_point[30][
                         0] > visibility_th:
                     cv.line(image, landmark_point[28][1], landmark_point[30][1],
-                            (0, 255, 0), 2)
+                            (0, 255, 0), thick)
                 if landmark_point[30][0] > visibility_th and landmark_point[32][
                         0] > visibility_th:
                     cv.line(image, landmark_point[30][1], landmark_point[32][1],
-                            (0, 255, 0), 2)
+                            (0, 255, 0), thick)
+                    
         return image
 
 
@@ -644,7 +676,7 @@ class Application(tk.Frame):
         return image
     
     def t1(self):
-        camera = cv.VideoCapture(1)                               
+        camera = cv.VideoCapture(self.choseCamNumber)                               
         
         # 動画ファイル保存用の設定
         fps = 20                   # カメラのFPSを取得
@@ -653,8 +685,9 @@ class Application(tk.Frame):
         h = int(camera.get(cv.CAP_PROP_FRAME_HEIGHT))             # カメラの縦幅を取得
         fourcc = cv.VideoWriter_fourcc('m', 'p', '4', 'v')        # 動画保存時のfourcc設定（mp4用）
         dt_now = datetime.datetime.now()
-        date = dt_now.strftime("%Y%m%d%H%M%S")
-        date = date + ".mp4"
+        self.file_time = time.time()
+        self.name = dt_now.strftime("%Y%m%d%H%M%S") + str(dt_now.microsecond)
+        date = self.name + ".mp4"
         video = cv.VideoWriter(date, fourcc, fps, (w, h))  # 動画の仕様（ファイル名、fourcc, FPS, サイズ）
         
 
@@ -674,6 +707,37 @@ class Application(tk.Frame):
             t = end - start
             if t < 0.05:
                 time.sleep(0.05 - t)
+                
+            
+# class Application2(tk.Frame):
+#     def __init__(self, root):
+#         super().__init__(root)
+#         self.root = root
+#         self.pack()
+#         self.root.geometry("1270x720")
+#         self.root.title("test")
+#         self.video = cv.VideoCapture("さかなー.mp4")
+#         self.createWidgets()
+#         self.play()
+        
+#     def createWidgets(self):
+#         self.canvas_video = tk.Canvas(self.root, width=960, height=540)
+#         self.canvas_video.pack()
+        
+#     def delWindow(self):
+#         self.root.destroy()
+        
+#     def play(self):
+#         ret, debug_image = self.video.read()
+#         if not ret:
+#             self.video.set(cv.CAP_PROP_POS_FRAMES, 0)
+        
+#         debug_image = cv.resize(debug_image, (960, 540))
+#         self.photo_line = ImageTk.PhotoImage(image=Image.fromarray(cv.cvtColor(debug_image, cv.COLOR_BGR2RGB)))
+#         self.canvas_video.delete("all")
+#         self.canvas_video.create_image(483, 273, image=self.photo_line)
+        
+#         self.after(1, self.play)
 
 if __name__ == '__main__':
     root = tk.Tk()
