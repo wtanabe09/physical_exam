@@ -14,12 +14,13 @@ with open(feature_file) as f:
     line = f.read().splitlines()
     num_of_line = len(line)
 
-    for i in range(0, num_of_line, 20):
+    for i in range(19, num_of_line, 20):
         line_arr = line[i].split(",")
         dt_now = datetime.datetime.now()
         micro_val = dt_now.microsecond / 1000000
+
         print(line_arr[second])
-        # print(dt_now.second, end=" ")
+
         print("医者-患者,顔の距離: ", round(float(line_arr[face_distance])), end=" ")
         for j in range(round(float(line_arr[face_distance])/10)):
             print('*', end='')
@@ -34,4 +35,5 @@ with open(feature_file) as f:
         for j in range(round(float(line_arr[elbow_angle])/5)):
             print('*', end='')
         print()
+    
         time.sleep(1 - micro_val)

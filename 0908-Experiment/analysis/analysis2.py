@@ -1,5 +1,5 @@
 import sys
-import os
+import math
 import numpy as np
 from calc_feature import distance, inner_product, x_distance
 
@@ -9,12 +9,14 @@ def calc_doctor_feature(doc_arr):
     right_shoulder = np.array([float(doc_arr[(11*2)+1]), float(doc_arr[(11*2)+2])]) # 右肩（左肩インデックス）
     right_elbow = np.array([float(doc_arr[(13*2)+1]), float(doc_arr[(13*2)+2])]) # 右肘
     right_wrist = np.array([float(doc_arr[(15*2)+1]), float(doc_arr[(15*2)+2])]) # 右手首
+    right_hip = np.array([float(doc_arr[(23*2)+1]), float(doc_arr[(23*2)+2])]) # 右腰（左肩インデックス）
 
-    hand_knee_distance = distance(right_index, right_knee) # 計算：右手から右膝までの距離
+    shoulder_hip = distance(right_shoulder, right_hip)
+    normal_hand_knee = distance(right_index, right_knee)/shoulder_hip # 計算：右手から右膝までの距離
     elbow_angle = inner_product(right_shoulder, right_elbow, right_wrist) # 計算：肘角度
     wrist_angle = inner_product(right_elbow, right_wrist, right_index) # 計算：手首の角度
 
-    return hand_knee_distance, elbow_angle, wrist_angle
+    return normal_hand_knee, elbow_angle, wrist_angle, shoulder_hip
 
 def calc_patient_feature(pat_arr):
     right_index = np.array([float(pat_arr[(19*2)+1]), float(pat_arr[(19*2)+2])])
@@ -66,7 +68,7 @@ def main():
             doc_line = doctor_line.split(",")
             pat_line = patient_line.split(",")
 
-            doc_hand_knee_distance, doc_elbow_angle, doc_wrist_angle = calc_doctor_feature(doc_line)
+            doc_hand_knee_distance, doc_elbow_angle, doc_wrist_angle, doc_shoulder_hip = calc_doctor_feature(doc_line)
             pat_elbow_angle, pat_wrist_angle = calc_patient_feature(pat_line)
             pair_shoulder_distance, pair_hip_distance, pair_nose_distance = calc_pair_feature(doc_line, pat_line)
 
@@ -87,12 +89,13 @@ def main():
             row_counter += 1
 
             result_arr = np.array([
-                round(row_counter / 20, 2),
+                round(row_counter/20, 2),
                 bool_action_now,
 
                 doc_hand_knee_distance,
                 doc_elbow_angle,
                 doc_wrist_angle,
+                doc_shoulder_hip,
 
                 pat_elbow_angle,
                 pat_wrist_angle,
