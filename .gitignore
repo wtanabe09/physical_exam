@@ -1,5 +1,6 @@
 .DS_Store
 *.mp4
+/confidential
 /0724-Confidential/*.mp4
 /0724-Confidential/crop
 /0724-COnfidential/feature_video
