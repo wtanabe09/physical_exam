@@ -6,8 +6,8 @@ import os
 import matplotlib.pyplot as plt
 
 input_csv = sys.argv[1] # feature_csv_files/20230908....
-select_colmn = int(sys.argv[2]) # プロットしたい特徴量, 0, 1, 2 を選択
-list_feature = ['doc_hand_knee', 'doc_elbow_angle', 'doc_wrist_angle', 'pat_wrist_angle', 'pair_shoulder', 'pair_hip']
+select_colmn = int(sys.argv[2]) # プロットしたい特徴量, 0,1,2,...,8 を選択
+list_feature = ['doc_hand_knee', 'doc_elbow_angle', 'doc_wrist_angle', 'doc_shoulder_hip', 'pat_wrist_angle', 'pat_elbow_angle', 'pair_shoulder', 'pair_hip', 'pair_face']
 dir_path = f"plot_files/{list_feature[select_colmn]}"
 base_name = os.path.splitext(os.path.basename(input_csv))[0]
 output_file_path = f"{dir_path}/{base_name}-{list_feature[select_colmn]}.png"

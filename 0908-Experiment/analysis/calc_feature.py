@@ -2,6 +2,7 @@ import sys
 import math
 from matplotlib import pyplot
 import numpy as np
+import heapq
 
 # input_csv = sys.argv[1] #csv ファイルセレクト
 # output_csv_path = sys.argv[2]
@@ -27,18 +28,15 @@ def distance(point_a, point_b):
 def x_distance(point_a, point_b):
   return point_a[0] - point_b[0]
 
-def distance_normalize(distance_feature):
-  return 
+def max_a_to_b(input_csv, index_a, index_b):
+  shoulder_hip_arr = []
+  with open(input_csv) as file:
+    for line in file:
+      input_arr = line.split(",")
+      shoulder_y =  float(input_arr[(index_a*2)+2])
+      hip_y = float(input_arr[(index_b*2)+2])
+      shoulder_hip_arr.append(hip_y - shoulder_y)
 
-  
-
-
-# with open(input_csv) as file:
-#   for line in file:
-#     input_arr = line.split(",")
-
-#     doctor_right_shoulder = np.array([float(input_arr[(11*2)+1]), float(input_arr[(11*2)+2])]) # 右肩（左肩インデックス）
-#     doctor_right_elbow = np.array([float(input_arr[(13*2)+1]), float(input_arr[(13*2)+2])]) # 右肘
-#     doctor_right_wrist = np.array([float(input_arr[(15*2)+1]), float(input_arr[(15*2)+2])]) # 右手首
-
-#     print(calc_elbow_angle(doctor_right_shoulder, doctor_right_elbow, doctor_right_wrist))
+  largest = heapq.nlargest(3, shoulder_hip_arr)
+  max_shoulder_hip = sum(largest) / 3 #大きい三つの平均
+  return max_shoulder_hip
