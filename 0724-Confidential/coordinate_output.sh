@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # input=$@ # clop
-files=`ls crop_videos/c_*-C.mp4`
+files=`ls ./crop_videos/b*-C.mp4`
 echo $files
 for file in $files; do
   base=`basename $file .mp4`

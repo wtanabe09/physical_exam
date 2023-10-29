@@ -12,7 +12,7 @@ mp_drawing = mp.solutions.drawing_utils
 mp_pose = mp.solutions.pose
 mp_holistic = mp.solutions.holistic
 
-data_land = np.zeros((0,99)) # 0row,99column, 33 * 3
+data_land = np.zeros((0,66)) # 0row,99column, 33 * 3
 # stream mp4 file
 cap = cv2.VideoCapture(input_file)#load mp4 file 引数に動画ファイルのパスを渡す
 with mp_holistic.Holistic(
@@ -48,12 +48,12 @@ with mp_holistic.Holistic(
         try:
           data1 = results.pose_landmarks.landmark[i].x
           data2 = results.pose_landmarks.landmark[i].y
-          data3 = results.pose_landmarks.landmark[i].z
+          # data3 = results.pose_landmarks.landmark[i].z
         except AttributeError:
           data1 = np.nan
           data2 = np.nan
-          data3 = np.nan
-        keydata = np.hstack((data1,data2,data3)).reshape(1,-1)
+          # data3 = np.nan
+        keydata = np.hstack((data1,data2)).reshape(1,-1)
         data_land2 = np.hstack((data_land2,keydata)) # hstack 水平方向に結合, 0~2:landmark_id:0のx,y,z
 
     data_land2 = data_land2[:,3:] # 全行，
