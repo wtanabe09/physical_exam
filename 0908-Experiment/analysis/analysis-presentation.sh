@@ -14,10 +14,11 @@ fi
 # data_parent=$@  # 20230908 への相対パスをコマンドライン引数で指定
 # data_dirs=`ls $data_parent`
 
-dir=$@
+data=$@
 dirs=`ls $data`
-
+dir=`basename $data`
 # for dir in $dirs; do
+
   # txt_to_csv.py input_path output_path
   python3 txt_to_csv.py "${dir}/${dir}_1.txt" "data_csv_files/${dir}-doc.csv"
   python3 txt_to_csv.py "${dir}/${dir}_2.txt" "data_csv_files/${dir}-pat.csv"
