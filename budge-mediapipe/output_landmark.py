@@ -1,3 +1,5 @@
+# 動画に対して，姿勢特徴量をビジュアルで描画する．
+# python3 output_landmark.py 
 import sys
 import numpy as np
 import matplotlib.pyplot as plt
@@ -10,7 +12,7 @@ mp_drawing_styles = mp.solutions.drawing_styles
 mp_pose = mp.solutions.pose
 
 # 動画ファイル読み込み
-print('get_file_name:', sys.argv[1])
+# print('get_file_name:', sys.argv[1])
 input_filename = sys.argv[1]
 video_data = cv2.VideoCapture(input_filename)
 video_fps = video_data.get(cv2.CAP_PROP_FPS)
@@ -36,7 +38,6 @@ while video_data.isOpened():
 video_data.release()
 print('Frames Read:',len(video_data_array))
 
-
 with mp_pose.Pose(
   static_image_mode=False,
   upper_body_only=False,
@@ -59,13 +60,15 @@ with mp_pose.Pose(
         mp_pose.POSE_CONNECTIONS,
         landmark_drawing_spec=mp_drawing_styles.get_default_pose_landmarks_style())
 
+# 動画描画
 plt.imshow(cv2.cvtColor(video_data_array[0], cv2.COLOR_BGR2RGB))
 plt.tight_layout()
 
+# 動画保存
 output_filename = f'{input_filename}_land.mp4'
-#出力形式を指定する
+# 出力形式を指定する
 output_file = cv2.VideoWriter(output_filename,cv2.VideoWriter_fourcc(*'MP4V'),video_fps,(video_width,video_hight))
-#動画出力処理
+# 動画出力処理
 for video_data in video_data_array:
   output_file.write(video_data)
 

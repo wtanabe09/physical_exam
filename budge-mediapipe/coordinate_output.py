@@ -1,4 +1,6 @@
-#必要なパッケージのインポート
+# example: python3 coordinate_output.py ...../202311....mp4 ....../202311......mp4
+
+# 必要なパッケージのインポート
 import sys
 import os
 import cv2
@@ -48,15 +50,16 @@ with mp_holistic.Holistic(
         try:
           data1 = results.pose_landmarks.landmark[i].x
           data2 = results.pose_landmarks.landmark[i].y
-          data3 = results.pose_landmarks.landmark[i].z
+          # data3 = results.pose_landmarks.landmark[i].z
         except AttributeError:
           data1 = np.nan
           data2 = np.nan
-          data3 = np.nan
-        keydata = np.hstack((data1,data2,data3)).reshape(1,-1)
+          # data3 = np.nan
+        # keydata = np.hstack((data1,data2,data3)).reshape(1,-1)
+        keydata = np.hstack((data1,data2)).reshape(1,-1)
         data_land2 = np.hstack((data_land2,keydata)) # hstack 水平方向に結合, 0~2:landmark_id:0のx,y,z
 
-    data_land2 = data_land2[:,3:] # 全行，
+    data_land2 = data_land2[:,3:] # 全行，３列目から最後まで
     data_land = np.vstack((data_land,data_land2)) # vstack 縦方向に結合, 
     # cv2.imshow('MediaPipe Holistic', image)
     # if cv2.waitKey(5) & 0xFF == 27:
