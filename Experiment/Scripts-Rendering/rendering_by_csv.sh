@@ -1,18 +1,24 @@
 #!/bin/sh
 
-# datadir='../Fixdata-Analysis'
-# dirs=`ls -d ../Fixdata-Analysis/*2023*`
-datadir='../kut-sample-video'
-dirs=`ls -d $datadir/*.mp4`
+datadir='../Fixdata-Analysis'
+dirs=`ls -d ../Fixdata-Analysis/*2023*`
+# datadir='../kut-sample-video'
+# dirs=`ls -d $datadir/*.mp4`
 
-for dir in $dirs; do
-    echo $dir
-    timestamp=`basename $dir .mp4`
-    echo $timestamp
-    python3 rendering_by_csv.py $timestamp $datadir $datadir/data_csv_files $datadir/feature_csv_files $datadir/rendering_images_videos
-done
+while read row; do
+    timestamp=`echo $row | cut -d , -f 1`
+    technique=`echo $row | cut -d , -f 4`
+    python3 rendering_by_csv.py $timestamp $datadir/videos $datadir/data_csv_files $datadir/feature_csv_files $datadir/rendering_images_videos/videos/$technique
+done < ../Fixdata-Analysis/time.csv
 
-echo rendering done
+# for dir in $dirs; do
+#     echo $dir
+#     timestamp=`basename $dir .mp4`
+#     echo $timestamp
+#     python3 rendering_by_csv.py $timestamp $datadir $datadir/data_csv_files $datadir/feature_csv_files $datadir/rendering_images_videos
+# done
+
+# echo rendering done
 
 
 # datadir='../Fixdata-Analysis'

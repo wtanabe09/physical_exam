@@ -58,12 +58,13 @@ def draw_feature_values(img, feature_array):
 
 # 実行時引数：python3 rendering.py timestamp[1] video_parent_dir[2] data_dir[3] feature_dir[4] rendering_dir[5]
 timestamp = sys.argv[1]
-input_video_path = sys.argv[2] + "/" + timestamp + ".mp4"
-# input_video_path = sys.argv[2] + "/" + timestamp + "_1.mp4" # for *2023* data
+# input_video_path = sys.argv[2] + "/" + timestamp + ".mp4"
+input_video_path = sys.argv[2] + "/" + timestamp + "_1.mp4" # for *2023* data
 doctor_csv_path = sys.argv[3] + "/" + timestamp + "-1.csv"
 patient_csv_path = sys.argv[3] + "/" + timestamp + "-2.csv"
 feature_csv_path = sys.argv[4] + "/" + timestamp + ".csv"
-output_video_path = sys.argv[5] + "/videos/" + timestamp + ".mp4"
+output_video_path = sys.argv[5] + "/" + timestamp + ".mp4"
+# output_video_path = sys.argv[5] + "/videos/" + timestamp + ".mp4"
 # output_image_path = sys.argv[5] + "/images/" + timestamp + ".png"
 
 # file path for testing
