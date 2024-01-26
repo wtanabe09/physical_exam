@@ -7,16 +7,20 @@ import cv2
 import mediapipe as mp
 import numpy as np
 
-input_file = sys.argv[1]
-output_path = sys.argv[2]
+input_file = sys.argv[1] # .mp4ファイル
+output_path = sys.argv[2] # .csvファイル
 
 mp_drawing = mp.solutions.drawing_utils
 mp_pose = mp.solutions.pose
 mp_holistic = mp.solutions.holistic
 
+
 data_land = np.zeros((0,66)) # 0row,99column, 33 * 2
 # stream mp4 file
 cap = cv2.VideoCapture(input_file)#load mp4 file 引数に動画ファイルのパスを渡す
+im_width = cap.get(cv2.CAP_PROP_FRAME_WIDTH)
+im_height = cap.get(cv2.CAP_PROP_FRAME_HEIGHT)
+
 with mp_holistic.Holistic(
     min_detection_confidence=0.5,
     min_tracking_confidence=0.5) as holistic:
@@ -27,11 +31,11 @@ with mp_holistic.Holistic(
       break
     
     # movie edit for doctor
-    # image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB) # 1frame の画像OpenCV用にカラーの方式を変換
-    # image = cv2.rectangle(image, (20, 80), (260, 350), (0, 255, 0), thickness=-1)
-    # image = cv2.rectangle(image, (550, 80), (700, 200), (0, 255, 0), thickness=-1) # (yoko, tate)
+    image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB) # 1frame の画像OpenCV用にカラーの方式を変換
+    image = cv2.rectangle(image, (20, 80), (260, 350), (0, 255, 0), thickness=-1)
+    image = cv2.rectangle(image, (550, 80), (700, 200), (0, 255, 0), thickness=-1) # (yoko, tate)
 
-    # movie edit for patient
+    # # movie edit for patient
     image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB) # 1frame の画像OpenCV用にカラーの方式を変換
     image = cv2.rectangle(image, (20, 80), (100, 350), (0, 255, 0), thickness=-1)
     image = cv2.rectangle(image, (550, 80), (700, 200), (0, 255, 0), thickness=-1) # (yoko, tate)
@@ -51,12 +55,15 @@ with mp_holistic.Holistic(
         image, results.pose_landmarks, mp_holistic.POSE_CONNECTIONS)
     
     #get coordinate
-    data_land2 = np.zeros((1,2))
+    data_land2 = np.zeros((1,0))
     
+    # landmark_x = min(int(landmark.x * image_width), image_width - 1)
+    # landmark_y = min(int(landmark.y * image_height), image_height - 1)
     for i in range (0,33):
         try:
-          data1 = results.pose_landmarks.landmark[i].x
-          data2 = results.pose_landmarks.landmark[i].y
+          data1 = int(results.pose_landmarks.landmark[i].x * im_width)
+          data2 = int(results.pose_landmarks.landmark[i].y * im_height)
+
           # data3 = results.pose_landmarks.landmark[i].z
         except AttributeError:
           data1 = np.nan

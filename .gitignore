@@ -2,3 +2,4 @@
 *.mp4
 /Experiment/*
 !/Experiment/Scripts-*/
+/realtime-mediapipe/

@@ -2,7 +2,6 @@
 
 # 必要なパッケージのインポート
 import sys
-import os
 import cv2
 import mediapipe as mp
 import numpy as np
@@ -14,10 +13,11 @@ mp_drawing = mp.solutions.drawing_utils
 mp_pose = mp.solutions.pose
 mp_holistic = mp.solutions.holistic
 
-data_land = np.zeros((0,99)) # 0row,99column, 33 * 3
+data_land = np.zeros((0,66)) # 0row,99column, 33 * 3
 # stream mp4 file
 cap = cv2.VideoCapture(input_file)#load mp4 file 引数に動画ファイルのパスを渡す
 with mp_holistic.Holistic(
+    num_poses=2,
     min_detection_confidence=0.5,
     min_tracking_confidence=0.5) as holistic:
   while cap.isOpened():
@@ -36,12 +36,9 @@ with mp_holistic.Holistic(
     image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
 
     #draw landmark
-    # mp_drawing.draw_landmarks(
-    #     image, results.left_hand_landmarks, mp_holistic.HAND_CONNECTIONS)
-    # mp_drawing.draw_landmarks(
-    #     image, results.right_hand_landmarks, mp_holistic.HAND_CONNECTIONS)
-    # mp_drawing.draw_landmarks(
-    #     image, results.pose_landmarks, mp_holistic.POSE_CONNECTIONS)
+    # mp_drawing.draw_landmarks(image, results.left_hand_landmarks, mp_holistic.HAND_CONNECTIONS)
+    # mp_drawing.draw_landmarks(image, results.right_hand_landmarks, mp_holistic.HAND_CONNECTIONS)
+    mp_drawing.draw_landmarks(image, results.pose_landmarks, mp_holistic.POSE_CONNECTIONS)
     
     #get coordinate
     data_land2 = np.zeros((1,3))
